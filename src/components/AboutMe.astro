@@ -32,7 +32,7 @@ const SKILLS = {
         <aside>
             <Image
                 src = {myImage}
-                alt = "Self photo"
+                alt = "Portrait of Abhishek Prashant"
                 loading = "lazy"
             />
         </aside>
@@ -46,48 +46,60 @@ const SKILLS = {
     }
     .aboutMeSection {
         display: flex;
-        column-gap: 30px;
-        line-height: 1.45;
+        column-gap: 48px;
+        line-height: 1.6;
         color: var(--primary);
     }
     .skillSection {
         display: flex;
-        column-gap: 30px;
+        flex-wrap: wrap;
+        column-gap: 40px;
+        row-gap: 24px;
     }
     aside:first-child {
         flex: 1;
     }
-    aside:last-child, img {
-        width: 300px;
-        height: 300px;
+    aside:last-child img {
+        width: 280px;
+        height: 280px;
         object-fit: cover;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--border-color);
     }
     ul {
         list-style: none;
         padding-left: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    li {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--secondary);
     }
     li::before {
-        content: "✔ ";
-        width: 10px;
-        color: var(--brand-green);
+        content: "";
+        width: 6px;
+        height: 6px;
+        flex-shrink: 0;
+        border-radius: 50%;
+        background-color: var(--brand-green);
     }
     h3 {
         margin-top: 3rem;
-        margin-bottom: 2rem;  
+        margin-bottom: 1.5rem;
     }
     @media only screen and (max-width: 768px) {
         .aboutMeSection {
             flex-direction: column-reverse;
             align-items: center;
         }
-        img {
-            width: 250px;
-            height: 250px;
-        }
-        aside:last-child, img {
+        aside:last-child img {
             width: 200px;
             height: 200px;
-            object-fit: cover;
         }
     }
 </style>

@@ -39,6 +39,13 @@ const { title } = Astro.props;
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="language" content="English">
 		<title>{title}</title>
+		<script is:inline>
+			(function () {
+				var stored = localStorage.getItem("theme");
+				var theme = stored || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+				document.documentElement.setAttribute("data-theme", theme);
+			})();
+		</script>
 	</head>
 	<script is:inline type="application/ld+json">
 	{
@@ -59,6 +66,7 @@ const { title } = Astro.props;
 	}
 	</script>
 	<body>
+		<a href="#main" class="skipLink">Skip to main content</a>
 		<slot />
 	</body>
 </html>
@@ -66,12 +74,53 @@ const { title } = Astro.props;
 	:root {
 		--accent: 124, 58, 237;
 		--accent-gradient: linear-gradient(45deg, rgb(var(--accent)), #da62c4 30%, white 60%);
-		--nav-height: 100px;
-		/** Theme */
-		--brand-green: #16a085;
-		--primary: #34495e;
-		--secondary: #7f8c8d;
+		--nav-height: 90px;
+
+		/** Motion */
+		--ease: cubic-bezier(0.22, 1, 0.36, 1);
+		--ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+		--duration-fast: 0.2s;
+		--duration-base: 0.4s;
+		--duration-slow: 0.65s;
+
+		/** Layout */
 		--contentHorizontalSpacing: 0 50px;
+		--radius-sm: 8px;
+		--radius-md: 14px;
+		--radius-lg: 22px;
+
+		/** Theme: light (default) */
+		--brand-green: #0d9488;
+		--brand-green-strong: #0b7c72;
+		--bg: #f6f6f6;
+		--bg-elevated: #ffffff;
+		--bg-inset: #eef0f0;
+		--border-color: rgba(15, 23, 22, 0.1);
+		--primary: #1f2933;
+		--secondary: #5b6b70;
+		--shadow-sm: 0 1px 3px rgba(15, 23, 22, 0.08), 0 1px 2px rgba(15, 23, 22, 0.06);
+		--shadow-md: 0 8px 24px rgba(15, 23, 22, 0.08), 0 2px 6px rgba(15, 23, 22, 0.05);
+		--shadow-lg: 0 16px 40px rgba(15, 23, 22, 0.12), 0 4px 10px rgba(15, 23, 22, 0.06);
+		--focus-ring: 0 0 0 3px rgba(13, 148, 136, 0.45);
+		color-scheme: light;
+	}
+	:root[data-theme="dark"] {
+		--brand-green: #2dd4bf;
+		--brand-green-strong: #5eead4;
+		--bg: #10151a;
+		--bg-elevated: #181f26;
+		--bg-inset: #1f2830;
+		--border-color: rgba(255, 255, 255, 0.1);
+		--primary: #eef2f3;
+		--secondary: #a3b0b5;
+		--shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+		--shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3);
+		--shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.3);
+		--focus-ring: 0 0 0 3px rgba(45, 212, 191, 0.5);
+		color-scheme: dark;
+	}
+	* {
+		box-sizing: border-box;
 	}
 	h1,h2,h3,h4,h5,h6 {
 		margin: 0;
@@ -81,10 +130,11 @@ const { title } = Astro.props;
 		padding-right: 20px;
 		position: relative;
 		z-index: 2;
-		background-color: #F6F6F6;
+		background-color: var(--bg);
 		display: flex;
 		align-items: center;
 		color: var(--primary);
+		transition: background-color var(--duration-base) var(--ease);
 	}
 	h1.sectionHeader::after {
 		content: " ";
@@ -92,14 +142,18 @@ const { title } = Astro.props;
 		position: relative;
 		height: 1px;
 		width: 50%;
-		background-color: var(--secondary);
+		background-color: var(--border-color);
 		margin-left: 10px;
 	}
 	html {
 		font-family: system-ui, sans-serif;
-		background-color: #F6F6F6;
+		background-color: var(--bg);
 		scroll-behavior: smooth;
 		color: var(--primary);
+		transition: background-color var(--duration-base) var(--ease), color var(--duration-base) var(--ease);
+	}
+	body {
+		margin: 0;
 	}
 	code {
 		font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
@@ -108,6 +162,23 @@ const { title } = Astro.props;
 	.fullHeightSection {
 		min-height: 100vh;
 		padding: 2rem 0;
+	}
+	.skipLink {
+		position: absolute;
+		top: -100px;
+		left: 1rem;
+		z-index: 1000;
+		background: var(--bg-elevated);
+		color: var(--primary);
+		padding: 0.75rem 1.25rem;
+		border-radius: var(--radius-sm);
+		box-shadow: var(--shadow-md);
+		text-decoration: none;
+		font-weight: 600;
+		transition: top var(--duration-fast) var(--ease);
+	}
+	.skipLink:focus {
+		top: 1rem;
 	}
 	a.underlineLink {
 		display: inline-block;
@@ -123,18 +194,24 @@ const { title } = Astro.props;
         background-color: var(--brand-green);
         bottom: -2.5px;
         left: 0;
-        transition: width 0.25s cubic-bezier(0.645,0.045,0.355,1);
+        transition: width 0.25s var(--ease);
     }
-    a:hover::after {
+    a:hover::after,
+    a:focus-visible::after {
         width: 100%;
     }
+	:focus-visible {
+		outline: none;
+		box-shadow: var(--focus-ring);
+		border-radius: var(--radius-sm);
+	}
 	section[id$='Section']:not(:first-child) {
 		opacity: 0;
-		transform: translateX(-50px);
-		transition: 0.5s all;
+		transform: translateY(30px);
+		transition: opacity var(--duration-slow) var(--ease), transform var(--duration-slow) var(--ease);
 	}
 	section[id$='Section']:not(:first-child).revealed {
-		transform: translateX(0px);
+		transform: translateY(0px);
 		opacity: 1;
 	}
 	@media only screen and (max-width: 768px) {
@@ -147,4 +224,16 @@ const { title } = Astro.props;
             --contentHorizontalSpacing: 0 25px;
         }
     }
+	@media (prefers-reduced-motion: reduce) {
+		*, *::before, *::after {
+			animation-duration: 0.001ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 0.001ms !important;
+			scroll-behavior: auto !important;
+		}
+		section[id$='Section']:not(:first-child) {
+			opacity: 1;
+			transform: none;
+		}
+	}
 </style>

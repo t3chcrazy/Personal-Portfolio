@@ -35,10 +35,10 @@ const SOCIALS = [
     <ul class = "socialsList">
         {SOCIALS.map(social => (
             <li>
-                <a href = {social.link} target = "_blank">
+                <a href = {social.link} target = "_blank" rel="noopener" aria-label = {social.alt}>
                     <Svg
                         src = {social.icon}
-                        aria-label = {social.alt}
+                        aria-hidden = "true"
                     />
                 </a>
             </li>
@@ -57,20 +57,27 @@ const SOCIALS = [
         display: flex;
         align-items: center;
         padding: 0;
-        column-gap: 10px;
+        column-gap: 14px;
     }
-    li, li svg {
-        width: 25px;
-        height: 25px;
+    li a {
+        display: grid;
+        place-items: center;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        color: var(--secondary);
+        background-color: var(--bg-elevated);
+        border: 1px solid var(--border-color);
+        transition: transform var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease), box-shadow var(--duration-fast) var(--ease);
     }
-    li, li svg {
-        transition: 0.25s all;
+    li svg {
+        width: 20px;
+        height: 20px;
     }
-    li:hover {
+    li a:hover, li a:focus-visible {
         transform: translateY(-5px);
-    }
-    li:hover svg {
-        fill: var(--brand-green);
+        color: var(--brand-green);
+        box-shadow: var(--shadow-md);
     }
     h3 {
         font-size: 24px;

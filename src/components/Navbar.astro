@@ -1,42 +1,59 @@
 ---
 import Svg from '@jasikpark/astro-svg-loader'
+
+const LINKS = [
+    { href: "/#aboutMeSection", label: "About", id: "aboutMeSection" },
+    { href: "/#experienceSection", label: "Experience", id: "experienceSection" },
+    { href: "/#contactSection", label: "Contact", id: "contactSection" },
+]
 ---
-<nav id = "navbar">
+<nav id = "navbar" aria-label = "Primary">
     <h1>
         <a href = "#introSection">AP</a>
     </h1>
     <ul id = "nav-buttons">
-        <li><a class = "underlineLink" href = "/#aboutMeSection">About</a></li>
-        <li><a class = "underlineLink" href = "/#experienceSection">Experience</a></li>
-        <li><a class = "underlineLink" href = "/#projects">Projects</a></li>
-        <li><a  class = "underlineLink"href = "/#contactSection">Contact</a></li>
-        <li><a class = "underlineLink" href = "/resume.pdf" target="_blank">Resume</a></li>
+        {LINKS.map(link => (
+            <li><a class = "underlineLink" data-section = {link.id} href = {link.href}>{link.label}</a></li>
+        ))}
+        <li><a class = "underlineLink" href = "/resume.pdf" target="_blank" rel="noopener">Resume</a></li>
     </ul>
-    <button id = "menu">
-        <Svg
-            src = {import("../images/hamburger-menu.svg?raw")}
-            aria-label = "Menu"
-        />
-    </button>
+    <div class = "navControls">
+        <button id = "themeToggle" type="button" aria-label = "Switch to light theme">
+            <svg class = "icon sunIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+            </svg>
+            <svg class = "icon moonIcon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 1020.354 15.354z"></path>
+            </svg>
+        </button>
+        <button id = "menu" type="button" aria-expanded = "false" aria-controls = "nav-buttons">
+            <Svg
+                src = {import("../images/hamburger-menu.svg?raw")}
+                aria-label = "Toggle navigation menu"
+            />
+        </button>
+    </div>
 </nav>
 <script>
-    const navbar = document.getElementById("navbar")
-    const menu = document.getElementById("menu")
-    const navList = document.getElementById("nav-buttons")
+    const navbar = document.getElementById("navbar") as HTMLElement
+    const menu = document.getElementById("menu") as HTMLButtonElement
+    const navList = document.getElementById("nav-buttons") as HTMLElement
+    const themeToggle = document.getElementById("themeToggle") as HTMLButtonElement
+    const mobileQuery = window.matchMedia("(max-width: 768px)")
+
     let lastPosition = 0
     let ticking = false
-    document.addEventListener("scroll", e => {
+    document.addEventListener("scroll", () => {
         if (!ticking) {
             requestAnimationFrame(() => {
                 if (window.innerWidth >= 768) {
-                    if (window.scrollY-lastPosition > 0) {
+                    if (window.scrollY - lastPosition > 0 && window.scrollY > 50) {
                         navbar.classList.add("hidden")
-                    }
-                    else {
+                    } else {
                         navbar.classList.remove("hidden")
-                }
-                }
-                else {
+                    }
+                } else {
                     navbar.classList.remove("hidden")
                 }
                 lastPosition = window.scrollY
@@ -45,9 +62,89 @@ import Svg from '@jasikpark/astro-svg-loader'
             ticking = true
         }
     })
+
+    function setMenuOpen(open: boolean) {
+        navList.classList.toggle("revealed", open)
+        menu.setAttribute("aria-expanded", String(open))
+        if (mobileQuery.matches) {
+            navList.toggleAttribute("inert", !open)
+        }
+        if (open) {
+            (navList.querySelector("a") as HTMLElement | null)?.focus()
+        }
+    }
+
+    function syncInertForViewport() {
+        if (mobileQuery.matches) {
+            navList.toggleAttribute("inert", !navList.classList.contains("revealed"))
+        } else {
+            navList.removeAttribute("inert")
+        }
+    }
+    syncInertForViewport()
+    mobileQuery.addEventListener("change", syncInertForViewport)
+
     menu.addEventListener("click", () => {
-        navList.classList.toggle("revealed")
+        setMenuOpen(!navList.classList.contains("revealed"))
     })
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && navList.classList.contains("revealed")) {
+            setMenuOpen(false)
+            menu.focus()
+        }
+    })
+
+    document.addEventListener("click", (e) => {
+        if (!mobileQuery.matches) return
+        if (!navList.classList.contains("revealed")) return
+        const target = e.target as Node
+        if (!navbar.contains(target)) return
+        if (navList.contains(target) || menu.contains(target)) return
+        setMenuOpen(false)
+    })
+
+    navList.addEventListener("click", (e) => {
+        if ((e.target as HTMLElement).tagName === "A" && mobileQuery.matches) {
+            setMenuOpen(false)
+        }
+    })
+
+    // Theme toggle
+    function applyTheme(theme: string) {
+        document.documentElement.setAttribute("data-theme", theme)
+        localStorage.setItem("theme", theme)
+        themeToggle.setAttribute("aria-label", theme === "dark" ? "Switch to light theme" : "Switch to dark theme")
+    }
+    themeToggle.setAttribute(
+        "aria-label",
+        document.documentElement.getAttribute("data-theme") === "dark" ? "Switch to light theme" : "Switch to dark theme"
+    )
+    themeToggle.addEventListener("click", () => {
+        const current = document.documentElement.getAttribute("data-theme")
+        applyTheme(current === "dark" ? "light" : "dark")
+    })
+
+    // Active section highlighting
+    const sections = LinksToSections()
+    function LinksToSections() {
+        const links = Array.from(navList.querySelectorAll("a[data-section]")) as HTMLAnchorElement[]
+        return links.map(link => ({
+            link,
+            section: document.getElementById(link.dataset.section as string)
+        })).filter(entry => entry.section)
+    }
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const match = sections.find(s => s.section === entry.target)
+            if (!match) return
+            if (entry.isIntersecting) {
+                sections.forEach(s => s.link.classList.remove("active"))
+                match.link.classList.add("active")
+            }
+        })
+    }, { rootMargin: "-40% 0px -50% 0px" })
+    sections.forEach(s => s.section && observer.observe(s.section))
 </script>
 <style>
     :root {
@@ -57,6 +154,7 @@ import Svg from '@jasikpark/astro-svg-loader'
         text-decoration-style: none;
         color: var(--primary);
         text-decoration-line: none;
+        font-weight: 700;
     }
     #navbar {
         display: flex;
@@ -65,22 +163,56 @@ import Svg from '@jasikpark/astro-svg-loader'
         backdrop-filter: blur(10px);
         align-items: center;
         max-height: var(--nav-height);
-        background-color: #F6F6F6;
+        background-color: color-mix(in srgb, var(--bg) 85%, transparent);
         padding: var(--contentHorizontalSpacing);
-        transition: transform 0.25s cubic-bezier(0.645,0.045,0.355,1);
+        transition: transform var(--duration-base) var(--ease), background-color var(--duration-base) var(--ease);
         position: fixed;
         top: 0;
         left: 0;
         box-sizing: border-box;
         width: 100%;
+        border-bottom: 1px solid var(--border-color);
     }
     #navbar.hidden {
         transform: translateY(calc(-1 * var(--nav-height)));
     }
+    .navControls {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    #themeToggle {
+        display: grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 1px solid var(--border-color);
+        background: var(--bg-elevated);
+        color: var(--primary);
+        cursor: pointer;
+        transition: transform var(--duration-fast) var(--ease), background-color var(--duration-fast) var(--ease);
+    }
+    #themeToggle:hover {
+        transform: translateY(-2px);
+    }
+    #themeToggle .icon {
+        width: 18px;
+        height: 18px;
+    }
+    #themeToggle .sunIcon {
+        display: none;
+    }
+    :global(html[data-theme="dark"]) #themeToggle .sunIcon {
+        display: block;
+    }
+    :global(html[data-theme="dark"]) #themeToggle .moonIcon {
+        display: none;
+    }
     #nav-buttons {
         display: flex;
         align-items: center;
-        gap: 20px;
+        gap: 28px;
         padding: 0;
     }
     #nav-buttons li {
@@ -89,23 +221,26 @@ import Svg from '@jasikpark/astro-svg-loader'
     }
     #nav-buttons li a {
         display: block;
-        animation: reveal 1s forwards;
-        animation-timing-function: cubic-bezier(0.645,0.045,0.355,1);
+        animation: reveal 0.8s forwards;
+        animation-timing-function: var(--ease);
         text-decoration: none;
         transform: translateY(-50px);
+        color: var(--secondary);
+        font-weight: 500;
+        transition: color var(--duration-fast) var(--ease);
+    }
+    #nav-buttons li a.active,
+    #nav-buttons li a:hover {
         color: var(--brand-green);
     }
     #nav-buttons li:nth-child(2) > a {
-        animation-delay: 100ms;
+        animation-delay: 80ms;
     }
     #nav-buttons li:nth-child(3) > a {
-        animation-delay: 200ms;
+        animation-delay: 160ms;
     }
     #nav-buttons li:nth-child(4) > a {
-        animation-delay: 300ms;
-    }
-    #nav-buttons li:nth-child(5) > a {
-        animation-delay: 400ms;
+        animation-delay: 240ms;
     }
     #menu {
         display: none;
@@ -113,9 +248,11 @@ import Svg from '@jasikpark/astro-svg-loader'
     @keyframes reveal {
         0% {
             transform: translateY(-50px);
+            opacity: 0;
         }
         100% {
             transform: translateY(0px);
+            opacity: 1;
         }
     }
     @media only screen and (max-width: 768px) {
@@ -127,9 +264,9 @@ import Svg from '@jasikpark/astro-svg-loader'
             place-items: center;
             border-radius: 50%;
             cursor: pointer;
-            z-index: 100;
             border: none;
             background: none;
+            color: var(--primary);
         }
         #menu svg {
             width: 40px;
@@ -137,20 +274,24 @@ import Svg from '@jasikpark/astro-svg-loader'
         }
         #nav-buttons {
             position: fixed;
-            background-color: #F6F6F6;
-            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            background-color: var(--bg-elevated);
+            box-shadow: var(--shadow-lg);
             right: 0;
             top: 0;
             height: 100vh;
-            width: 50%;
+            width: min(70%, 300px);
             flex-flow: column;
-            transform: translateX(100vw);
-            transition: 0.25s all;
-            padding-top: calc(var(--menu-size) + 20px) !important;
+            align-items: flex-start;
+            transform: translateX(100%);
+            transition: transform var(--duration-base) var(--ease);
+            padding: calc(var(--menu-size) + 32px) 32px 32px !important;
             margin: 0;
         }
         #nav-buttons.revealed {
             transform: translateX(0)
+        }
+        #nav-buttons li a {
+            font-size: 1.1rem;
         }
     }
 </style>

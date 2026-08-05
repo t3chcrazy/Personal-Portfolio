@@ -1,13 +1,24 @@
 <section id = "introSection" class = "fullHeightSection">
-    <div class = "slideWrapper">
-        <h2>Hey there! 👋</h2>
+    <div class = "introContent">
+        <div class = "slideWrapper">
+            <h2>Hey there! 👋</h2>
+        </div>
+        <div class = "slideWrapper">
+            <h1>I am Abhishek Prashant</h1>
+        </div>
+        <div class = "slideWrapper">
+            <h2>A <span class = "text-gradient">software engineer</span> by profession</h2>
+        </div>
+        <div class = "ctaRow">
+            <a class = "ctaPrimary" href = "#experienceSection">See my experience</a>
+            <a class = "ctaSecondary" href = "#contactSection">Get in touch</a>
+        </div>
     </div>
-    <div class = "slideWrapper">
-        <h1>I am Abhishek Prashant</h1>
-    </div>
-    <div class = "slideWrapper">
-        <h2>A <span class = "text-gradient">software engineer</span> by profession</h2>
-    </div>
+    <a href = "#aboutMeSection" class = "scrollCue" aria-label = "Scroll to about me section">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 4v16M6 14l6 6 6-6"></path>
+        </svg>
+    </a>
 </section>
 <style>
     #introSection {
@@ -15,6 +26,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+        position: relative;
     }
     @keyframes revealHeader {
         0% {
@@ -32,7 +44,7 @@
         position: relative;
     }
     .slideWrapper > h1, h2 {
-        animation: revealHeader 0.65s forwards cubic-bezier(0.645,0.045,0.355,1);
+        animation: revealHeader 0.65s forwards var(--ease);
         transform: translateY(-100%);
     }
     .slideWrapper:first-child h2 {
@@ -45,5 +57,82 @@
     }
     .slideWrapper:last-child h2 {
         animation-delay: 800ms;
+    }
+    .ctaRow {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-top: 2.5rem;
+        opacity: 0;
+        animation: fadeUp 0.6s forwards var(--ease);
+        animation-delay: 950ms;
+    }
+    @keyframes fadeUp {
+        0% {
+            opacity: 0;
+            transform: translateY(16px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    .ctaPrimary, .ctaSecondary {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.85rem 1.6rem;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: transform var(--duration-fast) var(--ease), box-shadow var(--duration-fast) var(--ease), background-color var(--duration-fast) var(--ease);
+    }
+    .ctaPrimary {
+        background-color: var(--brand-green);
+        color: #f6fdfc;
+        box-shadow: var(--shadow-sm);
+    }
+    .ctaPrimary:hover, .ctaPrimary:focus-visible {
+        background-color: var(--brand-green-strong);
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+    }
+    .ctaSecondary {
+        color: var(--primary);
+        border: 1px solid var(--border-color);
+        background-color: var(--bg-elevated);
+    }
+    .ctaSecondary:hover, .ctaSecondary:focus-visible {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-sm);
+    }
+    .scrollCue {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        color: var(--secondary);
+        animation: bob 2s ease-in-out infinite;
+    }
+    .scrollCue svg {
+        width: 24px;
+        height: 24px;
+    }
+    @keyframes bob {
+        0%, 100% {
+            transform: translate(-50%, 0);
+        }
+        50% {
+            transform: translate(-50%, 8px);
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .scrollCue {
+            animation: none;
+        }
+    }
+    @media only screen and (max-width: 576px) {
+        .scrollCue {
+            display: none;
+        }
     }
 </style>
