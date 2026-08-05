@@ -25,7 +25,7 @@ jobs:
         uses: withastro/action@v2
         with:
           path: .
-          node-version: 20 # or 18/16 based on your project compatibility
+          node-version: 24 # or 18/16 based on your project compatibility
 
   deploy:
     needs: build
