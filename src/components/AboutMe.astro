@@ -17,11 +17,11 @@ const SKILLS = {
                 and got fully committed to it and never looked back.<br /><br />
                 I am looking forward to grow as a developer and explore more exciting opportunities
             </div>
-            <h3>Skills</h3>
+            <h2>Skills</h2>
             <div class = "skillSection">
                 {Object.keys(SKILLS).map(key => (
                     <div class = "subSection">
-                        <h4>{key}</h4>
+                        <h3>{key}</h3>
                         <ul>
                             {SKILLS[key].map((skill: string) => <li>{skill}</li>)}
                         </ul>
@@ -34,6 +34,8 @@ const SKILLS = {
                 src = {myImage}
                 alt = "Portrait of Abhishek Prashant"
                 loading = "lazy"
+                width = {560}
+                height = {560}
             />
         </aside>
     </div>
@@ -88,9 +90,16 @@ const SKILLS = {
         border-radius: 50%;
         background-color: var(--brand-green);
     }
-    h3 {
+    h2 {
         margin-top: 3rem;
         margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+        color: var(--primary);
+    }
+    h3 {
+        font-size: 1.05rem;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
     }
     @media only screen and (max-width: 768px) {
         .aboutMeSection {
