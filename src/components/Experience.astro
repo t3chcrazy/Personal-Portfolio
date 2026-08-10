@@ -1,96 +1,66 @@
 ---
 import JobCard from "./JobCard.astro";
 
-const JOBS = {
-    "Qlik": {
+const JOBS = [
+    {
+        company: "Qlik",
         tenure: "July 2024 - Present",
-        designations: [
-            {
-                title: "Fullstack Software Developer",
-                responsibilities: [
-                    "Worked on new home experience flow which simplified customer actions significantly and improved customer efficiency",
-                    "Worked on an innovative new product which allow users to view AI generated insights based on users data",
-                    "Handled legacy code issues and upgrades, KMS key migration and implemented fixes in CI Pipeline which decreased release time by 30%"
-                ]
-            }
-        ],
-        skillsUsed: ["React", "TypeScript", "Node.js", "Vitest", "Adaptive Cards", "Design system", "Microfrontends", "Golang"]
+        title: "Fullstack Software Developer",
+        highlight: "Worked on new home experience flow which simplified customer actions significantly and improved customer efficiency",
+        skills: ["React", "TypeScript", "Node.js", "Golang"],
+        bg: "var(--color-blue)"
     },
-    "Hwayz": {
+    {
+        company: "Hwayz",
         tenure: "Oct 2023 - June 2024",
-        designations: [
-            {
-                title: "Senior Software Engineer",
-                responsibilities: [
-                    "Spearheaded the development of multiple consumer facing apps with React Native and internal dashboards with React, which drastically increased revenue, consumer retention and revenue monitoring",
-                    "Developed a restaurant order taking KOT system, which facilitated rapid and efficient order taking at offline restaurants, and implemented a kitchen display system (KDS) which helped with accurate order status management.",
-                    "Implemented native module for our customer facing React Native app like OTP auto read, integrated Firebase, Google Maps SDK and Juspay’s Hyper SDK For Payments."
-                ]
-            }
-        ]
+        title: "Senior Software Engineer",
+        highlight: "Spearheaded multiple consumer facing apps with React Native and internal dashboards with React, driving revenue and retention",
+        skills: ["React Native", "React", "Firebase"],
+        bg: "var(--color-yellow)"
     },
-    "ShopSe": {
+    {
+        company: "ShopSe",
         tenure: "Oct 2020 - Sept 2023",
-        designations: [
-            {
-                title: "Senior Software Engineer",
-                responsibilities: [
-                    "Collaborated with designers to create pixel perfect UI from figma",
-                    "Interacted with product managers to understand and implement business requirements",
-                    "Worked on lending flows for numerous banks and NBFCs which generated significant revenue"
-                ]
-            },
-            {
-                title: "Web Developer",
-                responsibilities: [
-                    "Worked on existing checkout flow and implemented bug fixes, increasing successful transaction conversions",
-                    "Revamped consumer and merchant apps made with React-Native, and implemented new features to improve user growth",
-                    "Created complex forms for loan onboarding flows, created reusable form schemas, which increased producitivity"
-                ]
-            }
-        ],
-        skillsUsed: ["React", "React-Native", "Material-UI", "Bootstrap", "Native Modules", "Jenkins", "Figma", "Google APIs"]
+        title: "Senior Software Engineer",
+        highlight: "Worked on lending flows for numerous banks and NBFCs which generated significant revenue",
+        skills: ["React", "React Native", "Material-UI", "Figma"],
+        bg: "var(--color-pink)"
     },
-    "Sabertooth Technologies": {
+    {
+        company: "Sabertooth Technologies",
         tenure: "Apr 2020 - Oct 2020",
-        designations: [
-            {
-                title: "Junior Web Developer",
-                responsibilities: [
-                    "Solely created multiple react native prototype projects for demonstration purposes",
-                    "Worked on a pharmacy inventory management app built with Flutter from scratch"
-                ]
-            }
-        ],
-        skillsUsed: ["React-Native", "Bootstrap", "Flutter"]
+        title: "Junior Web Developer",
+        highlight: "Solely created multiple React Native prototype projects for demonstration purposes",
+        skills: ["React Native", "Flutter", "Bootstrap"],
+        bg: "var(--color-lime)"
     },
-    "ProSavinns": {
+    {
+        company: "ProSavinns",
         tenure: "Oct 2019 - Mar 2020",
-        designations: [
-            {
-                title: "Web Developer",
-                responsibilities: [
-                    "Worked on initial landing page and existing stores list view page",
-                    "Woked on initial react-native app, integrated google maps to show list of associated merchants"
-                ]
-            }
-        ],
-        skillsUsed: ["React-Native", "Flask", "HTML", "CSS", "Google APIs"]
-    },
-}
+        title: "Web Developer",
+        highlight: "Built the initial React Native app and integrated Google Maps to show a list of associated merchants",
+        skills: ["React Native", "Flask", "Google APIs"],
+        bg: "var(--color-green)"
+    }
+]
 ---
-<section id = "experienceSection">
-    <h1 class = "sectionHeader">Experience</h1>
-    {Object.keys(JOBS).map((company, index) => (
-        <JobCard
-            companyName = {company}
-            companyDescription = {JOBS[company]}
-            isActive = {index === 0}
-        />
-    ))}
+<section id = "workSection">
+    <div class = "workIntro">
+        <h2 class = "display3">My selected works</h2>
+        <p class = "bodyLg">
+            Five companies, one throughline: shipping <strong>products</strong>, <strong>platforms</strong>, and <strong>flows</strong> that real users depend on every day.
+        </p>
+    </div>
+    <ul class = "workGrid">
+        {JOBS.map(job => <JobCard job = {job} />)}
+    </ul>
+    <div class = "workCta">
+        <p class = "bodyLg">Want the full story?</p>
+        <a class = "ctaPrimary" href = "/resume.pdf" target="_blank" rel="noopener">See my resume</a>
+    </div>
 </section>
 <script>
-    const cards = Array.from(document.querySelectorAll("#experienceSection .jobSection"))
+    const cards = Array.from(document.querySelectorAll("#workSection .jobCard"))
     const observer = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -100,7 +70,67 @@ const JOBS = {
         })
     }, { threshold: 0.15 })
     cards.forEach((card, index) => {
-        ;(card as HTMLElement).style.setProperty("--reveal-delay", `${Math.min(index, 4) * 90}ms`)
+        ;(card as HTMLElement).style.setProperty("--reveal-delay", `${Math.min(index, 5) * 80}ms`)
         observer.observe(card)
     })
 </script>
+<style>
+    #workSection {
+        display: flex;
+        flex-direction: column;
+        gap: 60px;
+    }
+    .workIntro {
+        max-width: 720px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .workIntro p {
+        color: var(--secondary);
+    }
+    .workIntro strong {
+        color: var(--primary);
+    }
+    .workGrid {
+        list-style: none;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+        padding: 0;
+        margin: 0;
+    }
+    .workCta {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 20px;
+        padding-top: 20px;
+    }
+    .workCta p {
+        color: var(--secondary);
+    }
+    .ctaPrimary {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.85rem 1.7rem;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 600;
+        background-color: var(--cta-bg);
+        color: var(--cta-text);
+        box-shadow: var(--shadow-sm);
+        transition: transform var(--duration-fast) var(--spring), box-shadow var(--duration-fast) var(--ease), background-color var(--duration-fast) var(--ease);
+    }
+    .ctaPrimary:hover, .ctaPrimary:focus-visible {
+        background-color: var(--cta-bg-hover);
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+    }
+    @media only screen and (max-width: 768px) {
+        .workGrid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

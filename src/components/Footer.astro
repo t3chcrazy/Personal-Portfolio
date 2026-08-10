@@ -1,5 +1,6 @@
 <footer>
-    <p>Made with code by Abhishek Prashant</p>
+    <p class = "tagline">Let's build something real, together.</p>
+    <p class = "copyright">&copy; {new Date().getFullYear()} Abhishek Prashant &mdash; built with Astro.</p>
 </footer>
 <style>
     footer {
@@ -7,14 +8,20 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        padding: 2rem 0 1rem;
+        gap: 8px;
+        padding: 2.5rem 0 1.5rem;
         text-align: center;
-        border-top: 1px solid var(--border-color);
-        margin-top: 2rem;
     }
-    footer p {
+    .tagline {
+        color: var(--primary);
+        font-family: var(--font-hand);
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin: 0;
+    }
+    .copyright {
         color: var(--secondary);
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         margin: 0;
     }
 </style>

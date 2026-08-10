@@ -6,109 +6,159 @@ const SKILLS = {
     Frameworks: ["React", "React-Native", "Flutter", "Bootstrap", "Svelte", "Astro"],
     Tools: ["Jira", "Figma", "Jenkins", "Eleventy"]
 }
+const PILL_COLORS = ["var(--color-blue)", "var(--color-yellow)", "var(--color-green)", "var(--color-pink)", "var(--color-lime)"]
 ---
-<section id = "aboutMeSection" class = "fullHeightSection">
-    <h1 class = "sectionHeader">About me</h1>
-    <div class = "aboutMeSection">
-        <aside>
-            <div>
-                Hi! My name is Abhishek Prashant and I enjoy creating delightful experiences for people through code.
+<section id = "aboutSection">
+    <div class = "aboutTop">
+        <aside class = "aboutText">
+            <p class = "handwritten">Hey! That's me.</p>
+            <h2 class = "display3 leftAlign">Abhishek Prashant</h2>
+            <p class = "bio">
+                I'm a software engineer who enjoys creating delightful experiences for people through code.
                 I got interested in app development after following a <a class = "underlineLink" href = "https://fullstackopen.com/en/" target = "_blank">free course</a> online
-                and got fully committed to it and never looked back.<br /><br />
-                I am looking forward to grow as a developer and explore more exciting opportunities
-            </div>
-            <h2>Skills</h2>
-            <div class = "skillSection">
-                {Object.keys(SKILLS).map(key => (
-                    <div class = "subSection">
-                        <h3>{key}</h3>
-                        <ul>
-                            {SKILLS[key].map((skill: string) => <li>{skill}</li>)}
-                        </ul>
-                    </div>
-                ))}
-            </div>
+                and got fully committed to it, never looking back.
+            </p>
+            <p class = "bio">
+                My journey has been shaped by shipping real products end to end &mdash; from lending flows used by banks and NBFCs,
+                to consumer apps and internal dashboards that teams rely on daily. I'm always looking to grow and explore new opportunities.
+            </p>
         </aside>
-        <aside>
+        <aside class = "aboutImage">
             <Image
                 src = {myImage}
                 alt = "Portrait of Abhishek Prashant"
                 loading = "lazy"
-                width = {560}
-                height = {560}
+                width = {420}
+                height = {420}
             />
         </aside>
     </div>
+    <div class = "capabilities">
+        <h3 class = "handwritten">My capabilities</h3>
+        <p class = "bodyLg">
+            The skills I bring are tailored to <strong>real product needs</strong> &mdash; from pixel-perfect UI to scalable backend systems.
+        </p>
+        <div class = "skillSection">
+            {Object.keys(SKILLS).map((key, groupIndex) => (
+                <div class = "subSection">
+                    <h4>{key}</h4>
+                    <ul>
+                        {SKILLS[key].map((skill: string) => (
+                            <li style = {`--pill-bg:${PILL_COLORS[groupIndex % PILL_COLORS.length]}`}>{skill}</li>
+                        ))}
+                    </ul>
+                </div>
+            ))}
+        </div>
+    </div>
 </section>
 <style>
-    #about-me {
+    #aboutSection {
         display: flex;
-        flex-flow: column;
-        justify-content: center;
+        flex-direction: column;
+        gap: 70px;
     }
-    .aboutMeSection {
+    .aboutTop {
         display: flex;
-        column-gap: 48px;
+        column-gap: 60px;
+        align-items: center;
+    }
+    .aboutText {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+    .handwritten {
+        font-family: var(--font-hand);
+        font-size: clamp(22px, 2.5vw, 28px);
+        font-weight: 600;
+        color: var(--primary);
+        margin: 0;
+    }
+    .leftAlign {
+        text-align: left;
+        margin: 0;
+    }
+    .bio {
+        color: var(--secondary);
         line-height: 1.6;
+        margin: 0;
+    }
+    .aboutImage img {
+        width: 320px;
+        height: 320px;
+        object-fit: cover;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-lg);
+        border: 6px solid var(--color-yellow);
+        transition: transform var(--duration-base) var(--spring);
+    }
+    .aboutImage img:hover {
+        transform: rotate(-2deg) scale(1.02);
+    }
+    .capabilities {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .capabilities > .bodyLg {
+        color: var(--secondary);
+        max-width: 640px;
+    }
+    .capabilities strong {
         color: var(--primary);
     }
     .skillSection {
         display: flex;
         flex-wrap: wrap;
-        column-gap: 40px;
-        row-gap: 24px;
-    }
-    aside:first-child {
-        flex: 1;
-    }
-    aside:last-child img {
-        width: 280px;
-        height: 280px;
-        object-fit: cover;
-        border-radius: var(--radius-lg);
-        box-shadow: var(--shadow-lg);
-        border: 1px solid var(--border-color);
+        column-gap: 48px;
+        row-gap: 28px;
+        margin-top: 12px;
     }
     ul {
         list-style: none;
         padding-left: 0;
         display: flex;
-        flex-direction: column;
+        flex-wrap: wrap;
         gap: 8px;
+        margin: 0;
     }
     li {
-        display: flex;
+        display: inline-flex;
         align-items: center;
         gap: 6px;
-        color: var(--secondary);
+        padding: 6px 14px;
+        border-radius: 999px;
+        background-color: var(--pill-bg, var(--color-blue));
+        color: var(--color-dark);
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: transform var(--duration-fast) var(--spring);
     }
-    li::before {
-        content: "";
-        width: 6px;
-        height: 6px;
-        flex-shrink: 0;
-        border-radius: 50%;
-        background-color: var(--brand-green);
+    li:hover {
+        transform: translateY(-3px);
     }
-    h2 {
-        margin-top: 3rem;
-        margin-bottom: 1.5rem;
-        font-size: 1.5rem;
-        color: var(--primary);
-    }
-    h3 {
+    h4 {
         font-size: 1.05rem;
         color: var(--primary);
         margin-bottom: 0.5rem;
     }
     @media only screen and (max-width: 768px) {
-        .aboutMeSection {
+        .aboutTop {
             flex-direction: column-reverse;
             align-items: center;
+            text-align: center;
         }
-        aside:last-child img {
-            width: 200px;
-            height: 200px;
+        .aboutText {
+            align-items: center;
+        }
+        .leftAlign {
+            text-align: center;
+        }
+        .aboutImage img {
+            width: 220px;
+            height: 220px;
         }
     }
 </style>

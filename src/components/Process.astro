@@ -1,0 +1,92 @@
+---
+const STATS = [
+    { number: "6+", label: "Years of experience", bg: "var(--color-blue)" },
+    { number: "5", label: "Companies worked with", bg: "var(--color-yellow)" },
+    { number: "15+", label: "Technologies used", bg: "var(--color-pink)" }
+]
+---
+<section id = "processSection">
+    <div class = "processIntro">
+        <h2 class = "display3">High-quality work with real value considered.</h2>
+        <p class = "bodyLg">
+            My approach revolves around maximizing productivity and craft with clarity and focus &mdash; starting from thorough requirement gathering, through careful implementation, to code that's built to last.
+        </p>
+    </div>
+    <div class = "statsBlock">
+        <h3 class = "handwritten">My numbers say it all</h3>
+        <ul class = "statsRow">
+            {STATS.map(stat => (
+                <li style = {`--stat-bg:${stat.bg}`}>
+                    <span class = "statNumber">{stat.number}</span>
+                    <span class = "statLabel">{stat.label}</span>
+                </li>
+            ))}
+        </ul>
+    </div>
+</section>
+<style>
+    #processSection {
+        display: flex;
+        flex-direction: column;
+        gap: 60px;
+        align-items: center;
+        text-align: center;
+    }
+    .processIntro {
+        max-width: 720px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .processIntro p {
+        color: var(--secondary);
+    }
+    .statsBlock {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+    }
+    .handwritten {
+        font-family: var(--font-hand);
+        font-size: clamp(22px, 2.5vw, 28px);
+        font-weight: 600;
+        color: var(--primary);
+        margin: 0;
+    }
+    .statsRow {
+        list-style: none;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        max-width: 800px;
+    }
+    .statsRow > li {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        padding: 40px 20px;
+        border-radius: var(--radius-md);
+        background-color: var(--stat-bg);
+    }
+    .statNumber {
+        font-size: clamp(36px, 5vw, 56px);
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        color: var(--color-dark);
+    }
+    .statLabel {
+        color: rgba(29, 29, 29, 0.7);
+        font-size: 0.95rem;
+    }
+    @media only screen and (max-width: 576px) {
+        .statsRow {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

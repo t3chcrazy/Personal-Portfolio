@@ -1,158 +1,88 @@
 ---
-const { companyDescription: { tenure, designations, skillsUsed }, companyName, isActive } = Astro.props
+export interface Props {
+    job: {
+        company: string;
+        tenure: string;
+        title: string;
+        highlight: string;
+        skills: string[];
+        bg: string;
+    };
+}
+const { job: { company, tenure, title, highlight, skills, bg } } = Astro.props
 ---
-<div class = "jobSection">
-    <div class = "circleRow">
-        <div class:list={["bulletCircle", { active: isActive }]} aria-hidden = "true"></div>
-        <div class = "jobSectionHeader">
-            <h2>{companyName}</h2>
-            <div class = "tenure">{tenure}</div>
-        </div>
+<li class = "jobCard" style = {`--card-bg:${bg}`}>
+    <div class = "jobCardTop">
+        <h3>{company}</h3>
+        <span class = "tenure">{tenure}</span>
     </div>
-    <div class = "jobContent">
-        {designations.map((designation: any) => (
-            <div>
-                <h3>{designation.title}</h3>
-                <ul class = "responsibilities">
-                    {designation.responsibilities.map(resp => (
-                        <li>{resp}</li>
-                    ))}
-                </ul>
-            </div>
-        ))}
-        {skillsUsed?.length > 0 && (
-            <h3 class = "skillHeader">Skills Used</h3>
-            <ul class = "skillContainer">
-                {skillsUsed.map((skill: string) => <li>{skill}</li>)}
-            </ul>
-        )}
-    </div>
-</div>
+    <p class = "role">{title}</p>
+    <p class = "highlight">{highlight}</p>
+    <ul class = "skillTags">
+        {skills.map((skill: string) => <li>{skill}</li>)}
+    </ul>
+</li>
 <style>
-    :root {
-        --circleSize: 30px;
-        --horizontalSpacing: 1rem;
-        --borderWidth: 2px;
-        counter-reset: jobCounter;
-    }
-    .jobSection {
+    .jobCard {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 32px;
+        border-radius: var(--radius-md);
+        background-color: var(--card-bg);
         opacity: 0;
-        transform: translateY(20px);
-        transition: opacity var(--duration-base) var(--ease), transform var(--duration-base) var(--ease);
+        transform: translateY(24px);
+        transition: opacity var(--duration-slow) var(--spring), transform var(--duration-slow) var(--spring);
         transition-delay: var(--reveal-delay, 0ms);
     }
-    .jobSection.cardRevealed {
+    .jobCard.cardRevealed {
         opacity: 1;
         transform: translateY(0);
     }
-    ul {
-        list-style: none;
-        padding: 0;
-    }
-    .responsibilities {
-        padding-left: 1rem;
-    }
-    .responsibilities > li {
-        line-height: 1.55;
-        margin-bottom: 6px;
-        color: var(--primary);
-    }
-    .responsibilities > li::before {
-        content: "✔ ";
-        color: var(--brand-green);
-    }
-    .circleRow {
+    .jobCardTop {
         display: flex;
-        align-items: center;
-    }
-    .bulletCircle {
-        width: var(--circleSize);
-        height: var(--circleSize);
-        border-radius: calc(var(--circleSize) / 2);
-        display: grid;
-        place-items: center;
-        counter-increment: jobCounter;
-        content: counter(jobCounter);
-        background-color: var(--border-color);
-        position: relative;
-        flex-shrink: 0;
-        transition: background-color var(--duration-base) var(--ease);
-    }
-    .jobSectionHeader {
-        padding-left: var(--horizontalSpacing);
-    }
-    .tenure {
-        color: var(--secondary);
-        font-size: 0.9rem;
-        margin-top: 2px;
-    }
-    .bulletCircle.active {
-        background-color: var(--brand-green);
-    }
-    .bulletCircle.active::before {
-        background-color: var(--brand-green);
-        opacity: 0.5;
-        content: " ";
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        animation: 1s infinite 0s pulse;
-        z-index: -1;
-    }
-    .skillContainer {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-    .skillContainer > li {
-        padding: 5px 15px;
-        border-radius: 20px;
-        background-color: var(--bg-inset);
-        color: var(--primary);
-        font-size: 0.9rem;
-        border: 1px solid var(--border-color);
-        transition: background-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease), transform var(--duration-fast) var(--ease);
-    }
-    .skillContainer > li:hover {
-        background-color: var(--brand-green);
-        color: #f6fdfc;
-        transform: translateY(-2px);
-    }
-    .jobContent {
-        padding: 1rem 0;
-        padding-left: calc(var(--circleSize) / 2 - var(--borderWidth) / 2 + var(--horizontalSpacing));
-        margin: 1rem 0;
-        margin-left: calc(var(--circleSize) / 2 - var(--borderWidth) / 2);
-    }
-    .jobSection:not(:last-child) .jobContent {
-        border-left: var(--borderWidth) solid var(--border-color);
-    }
-    .skillHeader {
-        margin-bottom: 10px;
-        color: var(--secondary);
-    }
-    h2 {
-        color: var(--primary);
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
     }
     h3 {
-        color: var(--secondary);
+        color: var(--color-dark);
+        font-size: 1.3rem;
     }
-    @keyframes pulse {
-        0% {
-            opacity: 0.5;
-            scale: 1;
-        }
-        100% {
-            opacity: 0;
-            scale: 2;
-        }
+    .tenure {
+        color: rgba(29, 29, 29, 0.6);
+        font-size: 0.85rem;
+        white-space: nowrap;
     }
-    @media (prefers-reduced-motion: reduce) {
-        .bulletCircle.active::before {
-            animation: none;
-            opacity: 0.35;
-        }
+    .role {
+        color: rgba(29, 29, 29, 0.75);
+        font-weight: 600;
+        margin: 0;
+    }
+    .highlight {
+        color: rgba(29, 29, 29, 0.7);
+        line-height: 1.5;
+        margin: 0;
+    }
+    .skillTags {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 0;
+        margin-top: auto;
+        padding-top: 8px;
+    }
+    .skillTags > li {
+        padding: 5px 12px;
+        border-radius: 999px;
+        background-color: rgba(255, 255, 255, 0.6);
+        color: var(--color-dark);
+        font-size: 0.82rem;
+        font-weight: 500;
+    }
+    :global(html[data-theme="dark"]) .skillTags > li {
+        background-color: rgba(0, 0, 0, 0.15);
     }
 </style>

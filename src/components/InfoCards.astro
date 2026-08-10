@@ -1,0 +1,138 @@
+---
+const CARDS = [
+    {
+        id: "work",
+        label: "Work",
+        title: "See my selected works",
+        desc: "5 companies, countless shipped features.",
+        href: "#workSection",
+        bg: "var(--color-blue)",
+        fly: "left"
+    },
+    {
+        id: "about",
+        label: "About",
+        title: "Get to know me",
+        desc: "Who I am and how I build.",
+        href: "#aboutSection",
+        bg: "var(--color-lime)",
+        fly: "up"
+    },
+    {
+        id: "contact",
+        label: "Contact",
+        title: "Let's get in touch",
+        desc: "Open to new opportunities.",
+        href: "#contactSection",
+        bg: "var(--color-pink)",
+        fly: "right"
+    }
+]
+---
+<section id = "infoCardsSection">
+    <ul class = "infoCards">
+        {CARDS.map(card => (
+            <li class:list = {["infoCard", `fly-${card.fly}`]} style = {`--card-bg:${card.bg}`}>
+                <a href = {card.href}>
+                    <span class = "cardLabel">{card.label}</span>
+                    <span class = "cardTitle">{card.title}</span>
+                    <span class = "cardDesc">{card.desc}</span>
+                    <span class = "cardArrow" aria-hidden = "true">&rarr;</span>
+                </a>
+            </li>
+        ))}
+    </ul>
+</section>
+<script>
+    const cards = Array.from(document.querySelectorAll("#infoCardsSection .infoCard"))
+    const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("settled")
+                obs.unobserve(entry.target)
+            }
+        })
+    }, { threshold: 0.3 })
+    cards.forEach(card => observer.observe(card))
+</script>
+<style>
+    #infoCardsSection {
+        padding: 3rem 0;
+    }
+    .infoCards {
+        list-style: none;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        padding: 0;
+        margin: 0;
+    }
+    .infoCard {
+        border-radius: var(--radius-md);
+        background-color: var(--card-bg);
+        transition: transform var(--duration-spring) var(--spring), opacity var(--duration-spring) var(--spring);
+        opacity: 0;
+    }
+    .infoCard.fly-left {
+        transform: translateX(-60px) rotate(-4deg);
+    }
+    .infoCard.fly-right {
+        transform: translateX(60px) rotate(4deg);
+    }
+    .infoCard.fly-up {
+        transform: translateY(40px) scale(0.96);
+    }
+    .infoCard.settled {
+        opacity: 1;
+        transform: none;
+    }
+    .infoCard > a {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 32px 28px;
+        height: 100%;
+        box-sizing: border-box;
+        text-decoration: none;
+        color: var(--color-dark);
+        transition: transform var(--duration-base) var(--spring);
+    }
+    .infoCard > a:hover {
+        transform: translateY(-6px);
+    }
+    .cardLabel {
+        font-family: var(--font-hand);
+        font-size: 1.2rem;
+        font-weight: 600;
+        opacity: 0.75;
+    }
+    .cardTitle {
+        font-size: 1.3rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+    }
+    .cardDesc {
+        font-size: 0.95rem;
+        opacity: 0.7;
+    }
+    .cardArrow {
+        margin-top: auto;
+        font-size: 1.4rem;
+        transition: transform var(--duration-fast) var(--spring);
+    }
+    .infoCard > a:hover .cardArrow {
+        transform: translateX(6px);
+    }
+    @media only screen and (max-width: 768px) {
+        .infoCards {
+            grid-template-columns: 1fr;
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .infoCard {
+            opacity: 1;
+            transform: none;
+            transition: none;
+        }
+    }
+</style>
