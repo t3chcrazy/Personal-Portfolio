@@ -13,109 +13,108 @@ export interface Props {
 }
 const { job: { company, tenure, title, highlight, skills, bg, points }, index } = Astro.props
 ---
-<li class = "jobCard" style = {`--card-bg:${bg}; --stack-index:${index}`}>
-    <div class = "jobVisual">
-        <span class = "jobInitial">{company.charAt(0)}</span>
-        <span class = "jobTenure">{tenure}</span>
+<li class = "timelineItem" style = {`--item-accent:${bg}; --reveal-delay:${Math.min(index, 5) * 90}ms`}>
+    <div class = "itemRail" aria-hidden = "true">
+        <span class = "itemDot"></span>
     </div>
-    <div class = "jobContent">
-        <div class = "jobContentTop">
-            <h3>{company}</h3>
-            <span class = "role">{title}</span>
+    <div class = "itemContent">
+        <span class = "itemTenure">{tenure}</span>
+        <div class = "itemHead">
+            <h3>{title}</h3>
+            <span class = "itemCompany">{company}</span>
         </div>
-        <p class = "highlight">{highlight}</p>
-        <ul class = "cardPoints">
+        <p class = "itemHighlight">{highlight}</p>
+        <ul class = "itemPoints">
             {points.map((point: string) => <li>{point}</li>)}
         </ul>
-        <ul class = "skillTags">
+        <ul class = "itemSkills">
             {skills.map((skill: string) => <li>{skill}</li>)}
         </ul>
     </div>
 </li>
 <style>
-    .jobCard {
-        list-style: none;
-        display: flex;
-        border-radius: var(--radius-md);
-        overflow: clip;
-        box-shadow: var(--shadow-sm);
-        background-color: var(--bg-elevated, var(--color-white));
+    .timelineItem {
+        position: relative;
+        display: grid;
+        grid-template-columns: 28px 1fr;
+        column-gap: 28px;
+        padding-bottom: 48px;
         opacity: 0;
-        transform: translateY(24px);
+        transform: translateY(20px);
         transition: opacity var(--duration-slow) var(--spring), transform var(--duration-slow) var(--spring);
         transition-delay: var(--reveal-delay, 0ms);
-        position: sticky;
-        top: calc(100px + var(--stack-index) * 26px);
-        z-index: calc(var(--stack-index) + 1);
-        margin-bottom: 32px;
     }
-    .jobCard.cardRevealed {
-        opacity: var(--stack-fade, 1);
-        transform: scale(var(--stack-scale, 1));
+    .timelineItem:last-child {
+        padding-bottom: 0;
     }
-    .jobVisual {
-        flex: 0 0 260px;
+    .timelineItem.itemRevealed {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .itemRail {
         display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 32px;
-        background-color: var(--card-bg);
+        justify-content: center;
+        padding-top: 6px;
     }
-    .jobInitial {
-        font-size: 4rem;
-        font-weight: 700;
-        line-height: 1;
-        color: var(--color-dark);
+    .itemDot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background-color: var(--bg-elevated);
+        border: 3px solid var(--item-accent);
+        box-shadow: 0 0 0 4px var(--bg);
+        transition: transform var(--duration-fast) var(--spring), background-color var(--duration-fast) var(--ease);
     }
-    .jobTenure {
-        color: rgba(29, 29, 29, 0.6);
-        font-size: 0.85rem;
-        white-space: nowrap;
+    .timelineItem:hover .itemDot {
+        background-color: var(--item-accent);
+        transform: scale(1.15);
     }
-    .jobContent {
-        flex: 1;
+    .itemContent {
         display: flex;
-        flex-direction: column;
-        gap: 12px;
-        padding: 32px;
-    }
-    .jobContentTop {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 12px;
-        flex-wrap: wrap;
-    }
-    h3 {
-        color: var(--primary);
-        font-size: 1.3rem;
-    }
-    .role {
-        color: var(--secondary);
-        font-weight: 600;
-        white-space: nowrap;
-    }
-    .highlight {
-        color: var(--secondary);
-        line-height: 1.5;
-        margin: 0;
-    }
-    .cardPoints {
-        display: none;
-        list-style: none;
         flex-direction: column;
         gap: 10px;
-        padding: 0;
-        margin: 0;
+        padding-top: 2px;
     }
-    .cardPoints > li {
+    .itemTenure {
+        color: var(--secondary);
+        font-size: 0.85rem;
+    }
+    .itemHead {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    .itemHead h3 {
+        color: var(--primary);
+        font-size: 1.35rem;
+    }
+    .itemCompany {
+        color: var(--secondary);
+        font-weight: 600;
+    }
+    .itemHighlight {
+        color: var(--secondary);
+        line-height: 1.55;
+        margin: 0;
+        max-width: 68ch;
+    }
+    .itemPoints {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 0;
+        margin: 4px 0 0;
+    }
+    .itemPoints > li {
         position: relative;
         padding-left: 20px;
         color: var(--secondary);
         line-height: 1.5;
         font-size: 0.92rem;
     }
-    .cardPoints > li::before {
+    .itemPoints > li::before {
         content: "";
         position: absolute;
         left: 0;
@@ -123,60 +122,42 @@ const { job: { company, tenure, title, highlight, skills, bg, points }, index } 
         width: 6px;
         height: 6px;
         border-radius: 50%;
-        background-color: var(--cta-bg);
+        background-color: var(--item-accent);
     }
-    .skillTags {
+    .itemSkills {
         list-style: none;
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
         padding: 0;
-        margin-top: auto;
-        padding-top: 8px;
+        margin-top: 6px;
     }
-    .skillTags > li {
+    .itemSkills > li {
         padding: 5px 12px;
         border-radius: 999px;
-        background-color: var(--color-blue);
+        background-color: var(--item-accent);
         color: var(--color-dark);
         font-size: 0.82rem;
         font-weight: 500;
     }
-    @media only screen and (max-width: 1299px) {
-        .jobCard {
-            position: static;
-            flex-direction: column;
-            margin-bottom: 0;
-            border-radius: 20px;
-            opacity: 1;
-            transform: none;
+    @media only screen and (max-width: 576px) {
+        .timelineItem {
+            grid-template-columns: 20px 1fr;
+            column-gap: 18px;
+            padding-bottom: 36px;
         }
-        .jobCard.cardRevealed {
-            opacity: 1;
-            transform: none;
+        .itemDot {
+            width: 12px;
+            height: 12px;
         }
-        .jobVisual {
-            flex: none;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            padding: 24px 28px;
-            border-radius: 20px 20px 0 0;
-        }
-        .jobInitial {
-            font-size: 3rem;
-        }
-        .jobContent {
-            gap: 16px;
-            padding: 24px 28px 28px;
-        }
-        .cardPoints {
-            display: flex;
+        .itemHead h3 {
+            font-size: 1.15rem;
         }
     }
-    @media only screen and (max-width: 768px) {
-        .jobInitial {
-            font-size: 2.5rem;
+    @media (prefers-reduced-motion: reduce) {
+        .timelineItem {
+            opacity: 1;
+            transform: none;
         }
     }
 </style>

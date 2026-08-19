@@ -2,9 +2,9 @@
 import myImage from '../images/myPhoto.webp'
 import { Image } from 'astro:assets';
 const SKILLS = {
-    Languages: ["HTML", "CSS", "JavaScript", "TypeScript", "Python", "Dart"],
-    Frameworks: ["React", "React-Native", "Flutter", "Bootstrap", "Svelte", "Astro"],
-    Tools: ["Jira", "Figma", "Jenkins", "Eleventy"]
+    Languages: ["JavaScript", "TypeScript", "Go", "HTML", "CSS"],
+    Frameworks: ["React", "React Native", "Redux", "Zustand", "Reanimated"],
+    Tools: ["Git", "Jenkins", "GitHub Actions", "ArgoCD", "MongoDB", "MySQL"]
 }
 const PILL_COLORS = ["var(--color-blue)", "var(--color-yellow)", "var(--color-green)", "var(--color-pink)", "var(--color-lime)"]
 ---
@@ -19,7 +19,7 @@ const PILL_COLORS = ["var(--color-blue)", "var(--color-yellow)", "var(--color-gr
                 and got fully committed to it, never looking back.
             </p>
             <p class = "bio">
-                My journey has been shaped by shipping real products end to end &mdash; from lending flows used by banks and NBFCs,
+                My journey has been shaped by shipping real products end to end, from lending flows used by banks and NBFCs,
                 to consumer apps and internal dashboards that teams rely on daily. I'm always looking to grow and explore new opportunities.
             </p>
         </aside>
@@ -36,7 +36,7 @@ const PILL_COLORS = ["var(--color-blue)", "var(--color-yellow)", "var(--color-gr
     <div class = "capabilities">
         <h3 class = "handwritten">My capabilities</h3>
         <p class = "bodyLg">
-            The skills I bring are tailored to <strong>real product needs</strong> &mdash; from pixel-perfect UI to scalable backend systems.
+            The skills I bring are tailored to <strong>real product needs</strong>, from pixel-perfect UI to scalable backend systems.
         </p>
         <div class = "skillSection">
             {Object.keys(SKILLS).map((key, groupIndex) => (

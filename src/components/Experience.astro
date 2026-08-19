@@ -5,40 +5,42 @@ const JOBS = [
     {
         company: "Qlik",
         tenure: "July 2024 - Present",
-        title: "Fullstack Software Developer",
-        highlight: "Worked on new home experience flow which simplified customer actions significantly and improved customer efficiency",
-        skills: ["React", "TypeScript", "Node.js", "Golang"],
+        title: "Full Stack Software Engineer",
+        highlight: "Building Minihomes and the Discovery Agent insight feed, while migrating REST services to Qlik's internal best practices and hardening the delivery pipeline",
+        skills: ["Go", "React", "REST APIs", "CI/CD"],
         bg: "var(--color-blue)",
         points: [
-            "Redesigned the home experience flow end to end, cutting customer clicks needed for core actions",
-            "Built shared component patterns across the React and Golang stack for faster feature delivery",
-            "Partnered with design and product to validate flows against real customer usage data"
+            "Built Minihomes, a new way to logically organize resources for performing specific tasks, increasing user productivity",
+            "Built the Discovery Agent insight feed that visualizes changes in customer data and shipped an embed feature so users can surface it inside their own dashboards",
+            "Led a major migration of REST services to Qlik's internal best practices, unblocking deployment of the embed feature",
+            "Handled legacy code upgrades and KMS key migration, and implemented CI pipeline fixes that decreased release time by 30%"
         ]
     },
     {
         company: "Hwayz",
         tenure: "Oct 2023 - June 2024",
-        title: "Senior Software Engineer",
-        highlight: "Spearheaded multiple consumer facing apps with React Native and internal dashboards with React, driving revenue and retention",
-        skills: ["React Native", "React", "Firebase"],
+        title: "Senior Software Developer",
+        highlight: "Spearheaded consumer facing apps in React Native and internal dashboards in React, driving revenue growth and consumer retention",
+        skills: ["React Native", "React", "Firebase", "Reanimated"],
         bg: "var(--color-yellow)",
         points: [
-            "Led development of consumer facing apps in React Native, shipped to production on a tight timeline",
-            "Built internal dashboards in React that surfaced key retention and revenue metrics",
-            "Owned Firebase infrastructure powering real time features across mobile and web"
+            "Spearheaded development of multiple consumer facing apps in React Native and internal dashboards in React",
+            "Developed a restaurant order-taking (KOT) system for rapid, efficient in-store ordering, plus a kitchen display system (KDS) for order status management",
+            "Implemented native modules for the customer app including OTP auto-read, and integrated Firebase, Google Maps SDK, and Juspay's Hyper SDK for payments"
         ]
     },
     {
         company: "ShopSe",
         tenure: "Oct 2020 - Sept 2023",
-        title: "Senior Software Engineer",
-        highlight: "Worked on lending flows for numerous banks and NBFCs which generated significant revenue",
-        skills: ["React", "React Native", "Material-UI", "Figma"],
+        title: "Senior Software Developer",
+        highlight: "Built NTB mobile lending flows in React Native for banks and NBFCs including IIFL, Kotak, HDFC, ICICI, and DMI, contributing nearly 30% of total revenue within a year",
+        skills: ["React Native", "React", "SSO", "Jenkins"],
         bg: "var(--color-pink)",
         points: [
-            "Built lending flows integrated with numerous banks and NBFCs, generating significant revenue",
-            "Designed reusable Material-UI component libraries shared across multiple products",
-            "Prototyped in Figma and shipped production ready React and React Native interfaces"
+            "Built NTB mobile flows in React Native for banks and NBFCs, contributing nearly 30% of total revenue within a year",
+            "Implemented an admin dashboard with SSO that unified authentication across internal sites and enabled user onboarding onto the platform",
+            "Led a consumer-app design revamp in React Native and a React rework of the checkout flow, driving user growth and higher daily volume",
+            "Automated web and mobile builds via Jenkins, enabling QA to generate builds and run testing efficiently"
         ]
     },
     {
@@ -76,98 +78,25 @@ const JOBS = [
             Five companies, one throughline: shipping <strong>products</strong>, <strong>platforms</strong>, and <strong>flows</strong> that real users depend on every day.
         </p>
     </div>
-    <div class = "workBody">
-        <div class = "workDescription">
-            <div class = "descSticky">
-                {JOBS.map((job, index) => (
-                    <div class = "descItem" data-index = {index}>
-                        <span class = "descTenure">{job.tenure}</span>
-                        <h3>{job.title} · {job.company}</h3>
-                        <ul class = "descPoints">
-                            {job.points.map((point) => <li>{point}</li>)}
-                        </ul>
-                    </div>
-                ))}
-            </div>
-        </div>
-        <div class = "workGridWrap">
-            <div class = "progressTrack" aria-hidden="true">
-                <svg viewBox = "0 0 4 100" preserveAspectRatio = "none">
-                    <line class = "progressBg" x1 = "2" y1 = "0" x2 = "2" y2 = "100" />
-                    <line class = "progressFill" x1 = "2" y1 = "0" x2 = "2" y2 = "100" />
-                </svg>
-            </div>
-            <ul class = "workGrid">
-                {JOBS.map((job, index) => <JobCard job = {job} index = {index} />)}
-            </ul>
-        </div>
-    </div>
+    <ol class = "timeline">
+        {JOBS.map((job, index) => <JobCard job = {job} index = {index} />)}
+    </ol>
     <div class = "workCta">
         <p class = "bodyLg">Want the full story?</p>
         <a class = "ctaPrimary" href = "/resume.pdf" target="_blank" rel="noopener">See my resume</a>
     </div>
 </section>
 <script>
-    const cards = Array.from(document.querySelectorAll("#workSection .jobCard"))
-    const descItems = Array.from(document.querySelectorAll("#workSection .descItem"))
-    const grid = document.querySelector("#workSection .workGrid") as HTMLElement | null
-    const progressFill = document.querySelector("#workSection .progressFill") as SVGLineElement | null
-    if (descItems[0]) descItems[0].classList.add("active")
-
+    const items = Array.from(document.querySelectorAll("#workSection .timelineItem"))
     const observer = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add("cardRevealed")
+                entry.target.classList.add("itemRevealed")
                 obs.unobserve(entry.target)
             }
         })
     }, { threshold: 0.15 })
-    cards.forEach((card, index) => {
-        ;(card as HTMLElement).style.setProperty("--reveal-delay", `${Math.min(index, 5) * 80}ms`)
-        observer.observe(card)
-    })
-
-    let ticking = false
-    const updateStack = () => {
-        let activeIndex = 0
-        cards.forEach((card, i) => {
-            const cardEl = card as HTMLElement
-            const cardRect = cardEl.getBoundingClientRect()
-            const stuckTop = 100 + i * 26
-            if (cardRect.top <= stuckTop + 10) activeIndex = i
-
-            const next = cards[i + 1] as HTMLElement | undefined
-            if (!next) {
-                cardEl.style.setProperty("--stack-scale", "1")
-                cardEl.style.setProperty("--stack-fade", "1")
-                return
-            }
-            const nextRect = next.getBoundingClientRect()
-            const overlap = Math.max(0, cardRect.bottom - nextRect.top)
-            const progress = Math.min(1, cardRect.height ? overlap / cardRect.height : 0)
-            cardEl.style.setProperty("--stack-scale", String(1 - progress * 0.06))
-            cardEl.style.setProperty("--stack-fade", String(1 - progress * 0.35))
-        })
-        descItems.forEach((item, i) => item.classList.toggle("active", i === activeIndex))
-
-        if (grid && progressFill) {
-            const rect = grid.getBoundingClientRect()
-            const total = rect.height - window.innerHeight * 0.5
-            const scrolled = window.innerHeight * 0.2 - rect.top
-            const progress = total > 0 ? Math.min(1, Math.max(0, scrolled / total)) : 0
-            progressFill.style.strokeDashoffset = String(100 - progress * 100)
-        }
-        ticking = false
-    }
-    const onScroll = () => {
-        if (!ticking) {
-            requestAnimationFrame(updateStack)
-            ticking = true
-        }
-    }
-    window.addEventListener("scroll", onScroll, { passive: true })
-    window.addEventListener("resize", onScroll)
-    updateStack()
+    items.forEach(item => observer.observe(item))
 </script>
 <style>
     #workSection {
@@ -187,91 +116,23 @@ const JOBS = [
     .workIntro strong {
         color: var(--primary);
     }
-    .workBody {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 60px;
-        align-items: start;
-    }
-    .workDescription {
-        position: sticky;
-        top: 100px;
-    }
-    .descSticky {
-        display: grid;
-    }
-    .descItem {
-        grid-area: 1 / 1;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        opacity: 0;
-        transform: translateY(16px);
-        transition: opacity var(--duration-slow) var(--ease), transform var(--duration-slow) var(--ease);
-        pointer-events: none;
-    }
-    .descItem.active {
-        opacity: 1;
-        transform: translateY(0);
-        pointer-events: auto;
-    }
-    .descTenure {
-        color: var(--secondary);
-        font-size: 0.85rem;
-    }
-    .descItem h3 {
-        color: var(--primary);
-        font-size: 1.6rem;
-    }
-    .descPoints {
+    .timeline {
+        position: relative;
         list-style: none;
         display: flex;
         flex-direction: column;
-        gap: 12px;
         padding: 0;
         margin: 0;
+        max-width: 820px;
     }
-    .descPoints > li {
-        position: relative;
-        padding-left: 22px;
-        color: var(--secondary);
-        line-height: 1.5;
-    }
-    .descPoints > li::before {
+    .timeline::before {
         content: "";
         position: absolute;
-        left: 0;
-        top: 0.55em;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background-color: var(--cta-bg);
-    }
-    .workGridWrap {
-        display: contents;
-    }
-    .workGrid {
-        list-style: none;
-        display: flex;
-        flex-direction: column;
-        padding: 0;
-        margin: 0;
-        flex: 1;
-        min-width: 0;
-    }
-    .progressTrack {
-        display: none;
-    }
-    .progressBg {
-        stroke: var(--border, rgba(29, 29, 29, 0.12));
-        stroke-width: 4;
-    }
-    .progressFill {
-        stroke: var(--cta-bg);
-        stroke-width: 4;
-        stroke-dasharray: 100;
-        stroke-dashoffset: 100;
-        transition: stroke-dashoffset var(--duration-fast) var(--ease);
+        top: 12px;
+        bottom: 12px;
+        left: 13px;
+        width: 2px;
+        background-color: var(--border-color);
     }
     .workCta {
         display: flex;
@@ -301,32 +162,9 @@ const JOBS = [
         transform: translateY(-3px);
         box-shadow: var(--shadow-md);
     }
-    @media only screen and (max-width: 1299px) {
-        .workBody {
-            grid-template-columns: 1fr;
-            gap: 32px;
-        }
-        .workDescription {
-            display: none;
-        }
-        .workGridWrap {
-            display: flex;
-            gap: 16px;
-            align-items: stretch;
-        }
-        .progressTrack {
-            display: block;
-            flex: 0 0 4px;
-            width: 4px;
-            align-self: stretch;
-        }
-        .progressTrack svg {
-            width: 100%;
-            height: 100%;
-            overflow: visible;
-        }
-        .workGrid {
-            gap: 32px;
+    @media only screen and (max-width: 576px) {
+        .timeline::before {
+            left: 9px;
         }
     }
 </style>
