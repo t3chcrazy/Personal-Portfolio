@@ -8,7 +8,12 @@ const JOBS = [
         title: "Fullstack Software Developer",
         highlight: "Worked on new home experience flow which simplified customer actions significantly and improved customer efficiency",
         skills: ["React", "TypeScript", "Node.js", "Golang"],
-        bg: "var(--color-blue)"
+        bg: "var(--color-blue)",
+        points: [
+            "Redesigned the home experience flow end to end, cutting customer clicks needed for core actions",
+            "Built shared component patterns across the React and Golang stack for faster feature delivery",
+            "Partnered with design and product to validate flows against real customer usage data"
+        ]
     },
     {
         company: "Hwayz",
@@ -16,7 +21,12 @@ const JOBS = [
         title: "Senior Software Engineer",
         highlight: "Spearheaded multiple consumer facing apps with React Native and internal dashboards with React, driving revenue and retention",
         skills: ["React Native", "React", "Firebase"],
-        bg: "var(--color-yellow)"
+        bg: "var(--color-yellow)",
+        points: [
+            "Led development of consumer facing apps in React Native, shipped to production on a tight timeline",
+            "Built internal dashboards in React that surfaced key retention and revenue metrics",
+            "Owned Firebase infrastructure powering real time features across mobile and web"
+        ]
     },
     {
         company: "ShopSe",
@@ -24,7 +34,12 @@ const JOBS = [
         title: "Senior Software Engineer",
         highlight: "Worked on lending flows for numerous banks and NBFCs which generated significant revenue",
         skills: ["React", "React Native", "Material-UI", "Figma"],
-        bg: "var(--color-pink)"
+        bg: "var(--color-pink)",
+        points: [
+            "Built lending flows integrated with numerous banks and NBFCs, generating significant revenue",
+            "Designed reusable Material-UI component libraries shared across multiple products",
+            "Prototyped in Figma and shipped production ready React and React Native interfaces"
+        ]
     },
     {
         company: "Sabertooth Technologies",
@@ -32,7 +47,12 @@ const JOBS = [
         title: "Junior Web Developer",
         highlight: "Solely created multiple React Native prototype projects for demonstration purposes",
         skills: ["React Native", "Flutter", "Bootstrap"],
-        bg: "var(--color-lime)"
+        bg: "var(--color-lime)",
+        points: [
+            "Solely built multiple React Native prototype apps for client demonstrations",
+            "Explored Flutter as an alternative cross platform stack for early stage prototypes",
+            "Delivered Bootstrap based web prototypes on short client turnaround times"
+        ]
     },
     {
         company: "ProSavinns",
@@ -40,7 +60,12 @@ const JOBS = [
         title: "Web Developer",
         highlight: "Built the initial React Native app and integrated Google Maps to show a list of associated merchants",
         skills: ["React Native", "Flask", "Google APIs"],
-        bg: "var(--color-green)"
+        bg: "var(--color-green)",
+        points: [
+            "Built the company's first React Native app from the ground up",
+            "Integrated Google Maps APIs to surface associated merchants near the user",
+            "Developed Flask services powering the app's merchant data endpoints"
+        ]
     }
 ]
 ---
@@ -51,9 +76,32 @@ const JOBS = [
             Five companies, one throughline: shipping <strong>products</strong>, <strong>platforms</strong>, and <strong>flows</strong> that real users depend on every day.
         </p>
     </div>
-    <ul class = "workGrid">
-        {JOBS.map(job => <JobCard job = {job} />)}
-    </ul>
+    <div class = "workBody">
+        <div class = "workDescription">
+            <div class = "descSticky">
+                {JOBS.map((job, index) => (
+                    <div class = "descItem" data-index = {index}>
+                        <span class = "descTenure">{job.tenure}</span>
+                        <h3>{job.title} · {job.company}</h3>
+                        <ul class = "descPoints">
+                            {job.points.map((point) => <li>{point}</li>)}
+                        </ul>
+                    </div>
+                ))}
+            </div>
+        </div>
+        <div class = "workGridWrap">
+            <div class = "progressTrack" aria-hidden="true">
+                <svg viewBox = "0 0 4 100" preserveAspectRatio = "none">
+                    <line class = "progressBg" x1 = "2" y1 = "0" x2 = "2" y2 = "100" />
+                    <line class = "progressFill" x1 = "2" y1 = "0" x2 = "2" y2 = "100" />
+                </svg>
+            </div>
+            <ul class = "workGrid">
+                {JOBS.map((job, index) => <JobCard job = {job} index = {index} />)}
+            </ul>
+        </div>
+    </div>
     <div class = "workCta">
         <p class = "bodyLg">Want the full story?</p>
         <a class = "ctaPrimary" href = "/resume.pdf" target="_blank" rel="noopener">See my resume</a>
@@ -61,6 +109,11 @@ const JOBS = [
 </section>
 <script>
     const cards = Array.from(document.querySelectorAll("#workSection .jobCard"))
+    const descItems = Array.from(document.querySelectorAll("#workSection .descItem"))
+    const grid = document.querySelector("#workSection .workGrid") as HTMLElement | null
+    const progressFill = document.querySelector("#workSection .progressFill") as SVGLineElement | null
+    if (descItems[0]) descItems[0].classList.add("active")
+
     const observer = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -73,6 +126,48 @@ const JOBS = [
         ;(card as HTMLElement).style.setProperty("--reveal-delay", `${Math.min(index, 5) * 80}ms`)
         observer.observe(card)
     })
+
+    let ticking = false
+    const updateStack = () => {
+        let activeIndex = 0
+        cards.forEach((card, i) => {
+            const cardEl = card as HTMLElement
+            const cardRect = cardEl.getBoundingClientRect()
+            const stuckTop = 100 + i * 26
+            if (cardRect.top <= stuckTop + 10) activeIndex = i
+
+            const next = cards[i + 1] as HTMLElement | undefined
+            if (!next) {
+                cardEl.style.setProperty("--stack-scale", "1")
+                cardEl.style.setProperty("--stack-fade", "1")
+                return
+            }
+            const nextRect = next.getBoundingClientRect()
+            const overlap = Math.max(0, cardRect.bottom - nextRect.top)
+            const progress = Math.min(1, cardRect.height ? overlap / cardRect.height : 0)
+            cardEl.style.setProperty("--stack-scale", String(1 - progress * 0.06))
+            cardEl.style.setProperty("--stack-fade", String(1 - progress * 0.35))
+        })
+        descItems.forEach((item, i) => item.classList.toggle("active", i === activeIndex))
+
+        if (grid && progressFill) {
+            const rect = grid.getBoundingClientRect()
+            const total = rect.height - window.innerHeight * 0.5
+            const scrolled = window.innerHeight * 0.2 - rect.top
+            const progress = total > 0 ? Math.min(1, Math.max(0, scrolled / total)) : 0
+            progressFill.style.strokeDashoffset = String(100 - progress * 100)
+        }
+        ticking = false
+    }
+    const onScroll = () => {
+        if (!ticking) {
+            requestAnimationFrame(updateStack)
+            ticking = true
+        }
+    }
+    window.addEventListener("scroll", onScroll, { passive: true })
+    window.addEventListener("resize", onScroll)
+    updateStack()
 </script>
 <style>
     #workSection {
@@ -92,13 +187,91 @@ const JOBS = [
     .workIntro strong {
         color: var(--primary);
     }
-    .workGrid {
-        list-style: none;
+    .workBody {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 24px;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: start;
+    }
+    .workDescription {
+        position: sticky;
+        top: 100px;
+    }
+    .descSticky {
+        display: grid;
+    }
+    .descItem {
+        grid-area: 1 / 1;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        opacity: 0;
+        transform: translateY(16px);
+        transition: opacity var(--duration-slow) var(--ease), transform var(--duration-slow) var(--ease);
+        pointer-events: none;
+    }
+    .descItem.active {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+    .descTenure {
+        color: var(--secondary);
+        font-size: 0.85rem;
+    }
+    .descItem h3 {
+        color: var(--primary);
+        font-size: 1.6rem;
+    }
+    .descPoints {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
         padding: 0;
         margin: 0;
+    }
+    .descPoints > li {
+        position: relative;
+        padding-left: 22px;
+        color: var(--secondary);
+        line-height: 1.5;
+    }
+    .descPoints > li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.55em;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--cta-bg);
+    }
+    .workGridWrap {
+        display: contents;
+    }
+    .workGrid {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        margin: 0;
+        flex: 1;
+        min-width: 0;
+    }
+    .progressTrack {
+        display: none;
+    }
+    .progressBg {
+        stroke: var(--border, rgba(29, 29, 29, 0.12));
+        stroke-width: 4;
+    }
+    .progressFill {
+        stroke: var(--cta-bg);
+        stroke-width: 4;
+        stroke-dasharray: 100;
+        stroke-dashoffset: 100;
+        transition: stroke-dashoffset var(--duration-fast) var(--ease);
     }
     .workCta {
         display: flex;
@@ -128,9 +301,32 @@ const JOBS = [
         transform: translateY(-3px);
         box-shadow: var(--shadow-md);
     }
-    @media only screen and (max-width: 768px) {
-        .workGrid {
+    @media only screen and (max-width: 1299px) {
+        .workBody {
             grid-template-columns: 1fr;
+            gap: 32px;
+        }
+        .workDescription {
+            display: none;
+        }
+        .workGridWrap {
+            display: flex;
+            gap: 16px;
+            align-items: stretch;
+        }
+        .progressTrack {
+            display: block;
+            flex: 0 0 4px;
+            width: 4px;
+            align-self: stretch;
+        }
+        .progressTrack svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+        .workGrid {
+            gap: 32px;
         }
     }
 </style>
