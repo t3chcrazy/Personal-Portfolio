@@ -10,9 +10,9 @@ const LINKS = [
 ---
 <nav id = "navbar" aria-label = "Primary">
     <div class = "navInner">
-        <h1>
-            <a href = "#heroSection">AP</a>
-        </h1>
+        <p class = "brandMark">
+            <a href = "#heroSection" aria-label = "Abhishek Prashant, home">AP</a>
+        </p>
         <ul id = "nav-buttons">
             {LINKS.map(link => (
                 <li><a class = "underlineLink" data-section = {link.id} href = {link.href}>{link.label}</a></li>
@@ -153,7 +153,10 @@ const LINKS = [
     :root {
         --menu-size: 40px;
     }
-    h1 > a {
+    .brandMark {
+        margin: 0;
+    }
+    .brandMark > a {
         text-decoration-style: none;
         color: var(--primary);
         text-decoration-line: none;

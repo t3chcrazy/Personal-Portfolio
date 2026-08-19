@@ -2,7 +2,7 @@
 import myImage from '../images/myPhoto.webp'
 import { Image } from 'astro:assets';
 const SKILLS = {
-    Languages: ["HTML", "CSS", "JavaScript", "Python", "Dart"],
+    Languages: ["HTML", "CSS", "JavaScript", "TypeScript", "Python", "Dart"],
     Frameworks: ["React", "React-Native", "Flutter", "Bootstrap", "Svelte", "Astro"],
     Tools: ["Jira", "Figma", "Jenkins", "Eleventy"]
 }
@@ -43,7 +43,7 @@ const PILL_COLORS = ["var(--color-blue)", "var(--color-yellow)", "var(--color-gr
                 <div class = "subSection">
                     <h4>{key}</h4>
                     <ul>
-                        {SKILLS[key].map((skill: string) => (
+                        {SKILLS[key as keyof typeof SKILLS].map((skill: string) => (
                             <li style = {`--pill-bg:${PILL_COLORS[groupIndex % PILL_COLORS.length]}`}>{skill}</li>
                         ))}
                     </ul>

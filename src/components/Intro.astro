@@ -3,8 +3,8 @@ import myImage from '../images/myPhoto.webp'
 import { Image } from 'astro:assets';
 
 const splitWords = (text: string) => text.split(" ")
-const role = splitWords("a software engineer.")
-const tagline = splitWords("I specialize in React, React-Native, and full-stack web development, with a strong track record of shipping products that scale.")
+const role = splitWords("a frontend & fullstack software engineer.")
+const tagline = splitWords("I specialize in React, React Native, and TypeScript, building full-stack web and mobile products. Open to freelance and full-time work.")
 ---
 <section id = "heroSection" class = "fullHeightSection">
     <div class = "badgeDot dotYellow" aria-hidden = "true"></div>
@@ -27,11 +27,11 @@ const tagline = splitWords("I specialize in React, React-Native, and full-stack 
     </div>
     <div class = "introContent">
         <div class = "topRow">
-            <h1 class = "display1 word" style = "--i:0">Hello!</h1>
+            <p class = "display1 word" style = "--i:0">Hello!</p>
             <span class = "avatar word" style = "--i:1">
                 <Image src = {myImage} alt = "" loading = "eager" width = {105} height = {105} />
             </span>
-            <h1 class = "display1 word" style = "--i:2">I'm Abhishek,</h1>
+            <p class = "display1 word" style = "--i:2">I'm Abhishek,</p>
         </div>
         <h1 class = "display1 rolePhrase">
             {role.map((word, i) => <span class = "word" style = {`--i:${i + 3}`}>{word}&nbsp;</span>)}
@@ -219,7 +219,7 @@ const tagline = splitWords("I specialize in React, React-Native, and full-stack 
         height: 100%;
         object-fit: cover;
     }
-    h1.display1 {
+    .display1 {
         color: var(--primary);
         margin: 0;
     }
