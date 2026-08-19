@@ -1,4 +1,10 @@
 ---
+import '@fontsource-variable/inter/opsz.css';
+import '@fontsource-variable/inter/opsz-italic.css';
+import '@fontsource/caveat/500.css';
+import '@fontsource/caveat/600.css';
+import '@fontsource/caveat/700.css';
+
 export interface Props {
 	title: string;
 }
@@ -42,9 +48,6 @@ const { title } = Astro.props;
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="language" content="English">
 		<title>{title}</title>
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
 		<script is:inline>
 			(function () {
 				var stored = localStorage.getItem("theme");
@@ -101,8 +104,8 @@ const { title } = Astro.props;
 		--accent: 124, 58, 237;
 		--accent-gradient: linear-gradient(45deg, rgb(var(--accent)), #da62c4 30%, white 60%);
 
-		/** Typography: Uncut Sans Variable substituted with Inter (closest freely-licensable match) */
-		--font-sans: "Inter", system-ui, sans-serif;
+		/** Typography: Uncut Sans Variable substituted with Inter (closest freely-licensable match), self-hosted */
+		--font-sans: "Inter Variable", "Inter", system-ui, sans-serif;
 		--font-hand: "Caveat", cursive;
 
 		/** Motion: approximating Framer's spring-physics easing with cubic-bezier */
