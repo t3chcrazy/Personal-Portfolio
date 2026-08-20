@@ -6,7 +6,7 @@ const CARDS = [
         title: "See my selected works",
         desc: "5 companies, countless shipped features.",
         href: "#workSection",
-        bg: "var(--color-blue)",
+        accent: "var(--color-blue)",
         fly: "left"
     },
     {
@@ -15,7 +15,7 @@ const CARDS = [
         title: "Get to know me",
         desc: "Who I am and how I build.",
         href: "#aboutSection",
-        bg: "var(--color-lime)",
+        accent: "var(--color-yellow)",
         fly: "up"
     },
     {
@@ -24,7 +24,7 @@ const CARDS = [
         title: "Let's get in touch",
         desc: "Open to new opportunities.",
         href: "#contactSection",
-        bg: "var(--color-pink)",
+        accent: "var(--color-green)",
         fly: "right"
     }
 ]
@@ -32,7 +32,7 @@ const CARDS = [
 <section id = "infoCardsSection">
     <ul class = "infoCards">
         {CARDS.map(card => (
-            <li class:list = {["infoCard", `fly-${card.fly}`]} style = {`--card-bg:${card.bg}`}>
+            <li class:list = {["infoCard", `fly-${card.fly}`]} style = {`--card-accent:${card.accent}`}>
                 <a href = {card.href}>
                     <span class = "cardLabel">{card.label}</span>
                     <span class = "cardTitle">{card.title}</span>
@@ -69,8 +69,10 @@ const CARDS = [
     }
     .infoCard {
         border-radius: var(--radius-md);
-        background-color: var(--card-bg);
-        transition: transform var(--duration-spring) var(--spring), opacity var(--duration-spring) var(--spring);
+        background-color: var(--bg-elevated);
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
+        transition: transform var(--duration-spring) var(--spring), opacity var(--duration-spring) var(--spring), box-shadow var(--duration-base) var(--ease);
         opacity: 0;
     }
     .infoCard.fly-left {
@@ -86,6 +88,9 @@ const CARDS = [
         opacity: 1;
         transform: none;
     }
+    .infoCard:hover {
+        box-shadow: var(--shadow-md);
+    }
     .infoCard > a {
         display: flex;
         flex-direction: column;
@@ -94,7 +99,7 @@ const CARDS = [
         height: 100%;
         box-sizing: border-box;
         text-decoration: none;
-        color: var(--color-dark);
+        color: var(--primary);
         transition: transform var(--duration-base) var(--spring);
     }
     .infoCard > a:hover {
@@ -104,7 +109,7 @@ const CARDS = [
         font-family: var(--font-hand);
         font-size: 1.2rem;
         font-weight: 600;
-        opacity: 0.75;
+        color: var(--secondary);
     }
     .cardTitle {
         font-size: 1.3rem;
@@ -113,11 +118,18 @@ const CARDS = [
     }
     .cardDesc {
         font-size: 0.95rem;
-        opacity: 0.7;
+        color: var(--secondary);
     }
     .cardArrow {
         margin-top: auto;
-        font-size: 1.4rem;
+        display: inline-grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--card-accent);
+        color: var(--color-dark);
+        font-size: 1.1rem;
         transition: transform var(--duration-fast) var(--spring);
     }
     .infoCard > a:hover .cardArrow {
