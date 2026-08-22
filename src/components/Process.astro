@@ -15,8 +15,8 @@ const STATS = [
     <div class = "statsBlock">
         <h3 class = "handwritten">My numbers say it all</h3>
         <ul class = "statsRow">
-            {STATS.map(stat => (
-                <li style = {`--stat-bg:${stat.bg}`}>
+            {STATS.map((stat, i) => (
+                <li style = {`--stat-bg:${stat.bg};--stat-i:${i}`}>
                     <span class = "statCircle">{stat.number}</span>
                     <span class = "statLabel">{stat.label}</span>
                 </li>
@@ -24,6 +24,18 @@ const STATS = [
         </ul>
     </div>
 </section>
+<script>
+    const stats = Array.from(document.querySelectorAll("#processSection .statsRow li"))
+    const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("statIn")
+                obs.unobserve(entry.target)
+            }
+        })
+    }, { threshold: 0.3 })
+    stats.forEach(stat => observer.observe(stat))
+</script>
 <style>
     #processSection {
         display: flex;
@@ -74,7 +86,14 @@ const STATS = [
         background-color: var(--bg-elevated);
         border: 1px solid var(--border-color);
         box-shadow: var(--shadow-sm);
-        transition: transform var(--duration-fast) var(--spring), box-shadow var(--duration-fast) var(--ease);
+        opacity: 0;
+        transform: translateY(18px) scale(0.94);
+        transition: transform var(--duration-spring) var(--spring), opacity var(--duration-spring) var(--spring), box-shadow var(--duration-fast) var(--ease);
+    }
+    .statsRow > li.statIn {
+        opacity: 1;
+        transform: none;
+        transition-delay: calc(var(--stat-i, 0) * 110ms);
     }
     .statsRow > li:hover {
         transform: translateY(-3px);
@@ -92,6 +111,15 @@ const STATS = [
         font-size: 1.35rem;
         font-weight: 600;
         letter-spacing: -0.02em;
+        transition: transform var(--duration-base) var(--ease-out-back);
+    }
+    .statsRow > li.statIn .statCircle {
+        animation: statPop var(--duration-base) var(--ease-out-back) backwards;
+        animation-delay: calc(var(--stat-i, 0) * 110ms + 120ms);
+    }
+    @keyframes statPop {
+        0% { transform: scale(0.6); }
+        100% { transform: scale(1); }
     }
     .statLabel {
         color: var(--secondary);
@@ -107,6 +135,16 @@ const STATS = [
         }
         .statsRow > li {
             justify-content: flex-start;
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .statsRow > li {
+            opacity: 1;
+            transform: none;
+            transition: none;
+        }
+        .statsRow > li.statIn .statCircle {
+            animation: none;
         }
     }
 </style>

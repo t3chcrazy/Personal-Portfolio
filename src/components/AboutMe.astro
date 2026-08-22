@@ -37,6 +37,7 @@ const PILL_COLORS = ["var(--color-blue)", "var(--color-yellow)", "var(--color-gr
             </span>
         </aside>
     </div>
+    <div class = "sectionDivider" aria-hidden = "true"></div>
     <div class = "capabilities">
         <h3 class = "handwritten">My capabilities</h3>
         <p class = "bodyLg">
@@ -44,11 +45,11 @@ const PILL_COLORS = ["var(--color-blue)", "var(--color-yellow)", "var(--color-gr
         </p>
         <div class = "skillSection">
             {Object.keys(SKILLS).map((key, groupIndex) => (
-                <div class = "subSection">
+                <div class = "subSection" style = {`--section-accent:${PILL_COLORS[groupIndex % PILL_COLORS.length]}`}>
                     <h4>{key}</h4>
                     <ul>
-                        {SKILLS[key as keyof typeof SKILLS].map((skill: string) => (
-                            <li style = {`--pill-bg:${PILL_COLORS[groupIndex % PILL_COLORS.length]}`}>{skill}</li>
+                        {SKILLS[key as keyof typeof SKILLS].map((skill: string, skillIndex: number) => (
+                            <li style = {`--pill-bg:${PILL_COLORS[groupIndex % PILL_COLORS.length]};--pill-i:${skillIndex}`}>{skill}</li>
                         ))}
                     </ul>
                 </div>
@@ -56,11 +57,30 @@ const PILL_COLORS = ["var(--color-blue)", "var(--color-yellow)", "var(--color-gr
         </div>
     </div>
 </section>
+<script>
+    const pills = Array.from(document.querySelectorAll("#aboutSection .skillSection li"))
+    const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("pillIn")
+                obs.unobserve(entry.target)
+            }
+        })
+    }, { threshold: 0.2 })
+    pills.forEach(pill => observer.observe(pill))
+</script>
 <style>
     #aboutSection {
         display: flex;
         flex-direction: column;
-        gap: 70px;
+        gap: 56px;
+    }
+    .sectionDivider {
+        width: 100%;
+        max-width: 120px;
+        height: 1px;
+        margin: 0 auto;
+        background-color: var(--border-color);
     }
     .aboutTop {
         display: flex;
@@ -88,6 +108,7 @@ const PILL_COLORS = ["var(--color-blue)", "var(--color-yellow)", "var(--color-gr
         color: var(--secondary);
         line-height: 1.6;
         margin: 0;
+        max-width: 58ch;
     }
     .aboutImage {
         position: relative;
@@ -166,15 +187,34 @@ const PILL_COLORS = ["var(--color-blue)", "var(--color-yellow)", "var(--color-gr
         color: var(--color-dark);
         font-size: 0.9rem;
         font-weight: 500;
-        transition: transform var(--duration-fast) var(--spring);
+        opacity: 0;
+        transform: translateY(10px);
+        transition: transform var(--duration-fast) var(--spring), opacity var(--duration-base) var(--spring);
+    }
+    li.pillIn {
+        opacity: 1;
+        transform: none;
+        transition-delay: calc(var(--pill-i, 0) * 45ms);
     }
     li:hover {
         transform: translateY(-3px);
     }
     h4 {
+        display: flex;
+        align-items: center;
+        gap: 8px;
         font-size: 1.05rem;
         color: var(--primary);
         margin-bottom: 0.5rem;
+    }
+    h4::before {
+        content: "";
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: var(--section-accent, var(--color-blue));
+        flex-shrink: 0;
     }
     @media only screen and (max-width: 768px) {
         .aboutTop {
@@ -191,6 +231,13 @@ const PILL_COLORS = ["var(--color-blue)", "var(--color-yellow)", "var(--color-gr
         .aboutImage img {
             width: 220px;
             height: 220px;
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .skillSection li {
+            opacity: 1;
+            transform: none;
+            transition: none;
         }
     }
 </style>

@@ -15,9 +15,9 @@ const LINKS = [
         </p>
         <ul id = "nav-buttons">
             {LINKS.map(link => (
-                <li><a class = "underlineLink" data-section = {link.id} href = {link.href}>{link.label}</a></li>
+                <li><a class = "underlineLink" data-section = {link.id} data-label = {link.label} href = {link.href}>{link.label}</a></li>
             ))}
-            <li><a class = "underlineLink" href = "/resume.pdf" target="_blank" rel="noopener">Resume</a></li>
+            <li><a class = "underlineLink" data-label = "Resume" href = "/resume.pdf" target="_blank" rel="noopener">Resume</a></li>
         </ul>
         <div class = "navControls">
             <button id = "themeToggle" type="button" aria-label = "Switch to light theme">
@@ -202,7 +202,7 @@ const LINKS = [
         border-radius: 50%;
         border: 1px solid var(--border-color);
         background: var(--color-yellow);
-        color: var(--primary);
+        color: var(--color-dark);
         cursor: pointer;
         transition: transform var(--duration-fast) var(--spring), background-color var(--duration-fast) var(--ease);
     }
@@ -244,6 +244,14 @@ const LINKS = [
         color: var(--secondary);
         font-weight: 500;
         transition: color var(--duration-fast) var(--ease);
+    }
+    #nav-buttons li a::before {
+        content: attr(data-label);
+        display: block;
+        height: 0;
+        overflow: hidden;
+        font-weight: 600;
+        visibility: hidden;
     }
     #nav-buttons li a.active,
     #nav-buttons li a:hover {
