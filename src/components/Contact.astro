@@ -6,25 +6,29 @@ const SOCIALS = [
         icon: import('../images/mail.svg?raw'),
         link: "mailto:abhishekprashant09@gmail.com",
         alt: "Mail",
-        bg: "var(--color-blue)"
+        bg: "var(--color-blue)",
+        event: "contact-mail-click"
     },
     {
         icon: import('../images/twitter.svg?raw'),
         link: "https://twitter.com/The1WhoIsMany",
         alt: "Twitter",
-        bg: "var(--color-pink)"
+        bg: "var(--color-pink)",
+        event: "contact-twitter-click"
     },
     {
         icon: import('../images/linkedin.svg?raw'),
         link: "https://linkedin.com/in/abhishek-prashant-92b152a9",
         alt: "Linkedin",
-        bg: "var(--color-yellow)"
+        bg: "var(--color-yellow)",
+        event: "contact-linkedin-click"
     },
     {
         icon: import('../images/github.svg?raw'),
         link: "https://github.com/t3chcrazy",
         alt: "Github",
-        bg: "var(--color-lime)"
+        bg: "var(--color-lime)",
+        event: "contact-github-click"
     }
 ]
 ---
@@ -43,7 +47,7 @@ const SOCIALS = [
     <ul class = "socialsList">
         {SOCIALS.map(social => (
             <li style = {`--pill-bg:${social.bg}`}>
-                <a href = {social.link} target = "_blank" rel="noopener" aria-label = {social.alt}>
+                <a href = {social.link} target = "_blank" rel="noopener" aria-label = {social.alt} data-goatcounter-click = {social.event}>
                     <Svg
                         src = {social.icon}
                         aria-hidden = "true"
