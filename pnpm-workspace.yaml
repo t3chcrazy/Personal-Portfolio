@@ -2,6 +2,8 @@ allowBuilds:
   '@jasikpark/astro-svg-loader': true
   esbuild: true
   sharp: true
+  wrangler: true
+  workerd: true
 onlyBuiltDependencies:
   - '@jasikpark/astro-svg-loader'
   - esbuild
