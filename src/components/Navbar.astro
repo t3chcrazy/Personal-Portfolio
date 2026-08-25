@@ -2,37 +2,40 @@
 import Svg from '@jasikpark/astro-svg-loader'
 
 const LINKS = [
-    { href: "/#aboutMeSection", label: "About", id: "aboutMeSection" },
-    { href: "/#experienceSection", label: "Experience", id: "experienceSection" },
+    { href: "/#workSection", label: "Work", id: "workSection" },
+    { href: "/#processSection", label: "Process", id: "processSection" },
+    { href: "/#aboutSection", label: "About", id: "aboutSection" },
     { href: "/#contactSection", label: "Contact", id: "contactSection" },
 ]
 ---
 <nav id = "navbar" aria-label = "Primary">
-    <h1>
-        <a href = "#introSection">AP</a>
-    </h1>
-    <ul id = "nav-buttons">
-        {LINKS.map(link => (
-            <li><a class = "underlineLink" data-section = {link.id} href = {link.href}>{link.label}</a></li>
-        ))}
-        <li><a class = "underlineLink" href = "/resume.pdf" target="_blank" rel="noopener" data-goatcounter-click = "resume-click">Resume</a></li>
-    </ul>
-    <div class = "navControls">
-        <button id = "themeToggle" type="button" aria-label = "Switch to light theme">
-            <svg class = "icon sunIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="4"></circle>
-                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
-            </svg>
-            <svg class = "icon moonIcon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 1020.354 15.354z"></path>
-            </svg>
-        </button>
-        <button id = "menu" type="button" aria-expanded = "false" aria-controls = "nav-buttons">
-            <Svg
-                src = {import("../images/hamburger-menu.svg?raw")}
-                aria-label = "Toggle navigation menu"
-            />
-        </button>
+    <div class = "navInner">
+        <p class = "brandMark">
+            <a href = "#heroSection" title = "Abhishek Prashant, home">AP</a>
+        </p>
+        <ul id = "nav-buttons">
+            {LINKS.map(link => (
+                <li><a class = "underlineLink" data-section = {link.id} data-label = {link.label} href = {link.href}>{link.label}</a></li>
+            ))}
+            <li><a class = "underlineLink" data-label = "Resume" href = "/resume.pdf" target="_blank" rel="noopener" data-goatcounter-click = "resume-click">Resume</a></li>
+        </ul>
+        <div class = "navControls">
+            <button id = "themeToggle" type="button" aria-label = "Switch to light theme">
+                <svg class = "icon sunIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4"></circle>
+                    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+                </svg>
+                <svg class = "icon moonIcon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 1020.354 15.354z"></path>
+                </svg>
+            </button>
+            <button id = "menu" type="button" aria-expanded = "false" aria-controls = "nav-buttons">
+                <Svg
+                    src = {import("../images/hamburger-menu.svg?raw")}
+                    aria-label = "Toggle navigation menu"
+                />
+            </button>
+        </div>
     </div>
 </nav>
 <script>
@@ -150,31 +153,41 @@ const LINKS = [
     :root {
         --menu-size: 40px;
     }
-    h1 > a {
+    .brandMark {
+        margin: 0;
+    }
+    .brandMark > a {
         text-decoration-style: none;
         color: var(--primary);
         text-decoration-line: none;
-        font-weight: 700;
+        font-weight: 600;
+        letter-spacing: -0.02em;
     }
     #navbar {
-        display: flex;
         z-index: 100;
-        justify-content: space-between;
-        backdrop-filter: blur(10px);
-        align-items: center;
-        max-height: var(--nav-height);
-        background-color: color-mix(in srgb, var(--bg) 85%, transparent);
-        padding: var(--contentHorizontalSpacing);
-        transition: transform var(--duration-base) var(--ease), background-color var(--duration-base) var(--ease);
         position: fixed;
         top: 0;
         left: 0;
-        box-sizing: border-box;
-        width: 100%;
-        border-bottom: 1px solid var(--border-color);
+        right: 0;
+        padding-top: 40px;
+        transition: transform var(--duration-base) var(--spring);
     }
     #navbar.hidden {
-        transform: translateY(calc(-1 * var(--nav-height)));
+        transform: translateY(calc(-1 * (var(--nav-height))));
+    }
+    .navInner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: min(calc(100% - 2 * var(--gutter)), 1200px);
+        height: 76px;
+        margin: 0 auto;
+        padding: 0 30px;
+        box-sizing: border-box;
+        background-color: var(--bg-elevated);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
     }
     .navControls {
         display: flex;
@@ -188,10 +201,13 @@ const LINKS = [
         height: 40px;
         border-radius: 50%;
         border: 1px solid var(--border-color);
-        background: var(--bg-elevated);
-        color: var(--primary);
+        background: var(--color-yellow);
+        color: var(--color-dark);
         cursor: pointer;
-        transition: transform var(--duration-fast) var(--ease), background-color var(--duration-fast) var(--ease);
+        transition: transform var(--duration-fast) var(--spring), background-color var(--duration-fast) var(--ease);
+    }
+    :global(html[data-theme="dark"]) #themeToggle {
+        background: var(--color-purple);
     }
     #themeToggle:hover {
         transform: translateY(-2px);
@@ -229,9 +245,18 @@ const LINKS = [
         font-weight: 500;
         transition: color var(--duration-fast) var(--ease);
     }
+    #nav-buttons li a::before {
+        content: attr(data-label);
+        display: block;
+        height: 0;
+        overflow: hidden;
+        font-weight: 600;
+        visibility: hidden;
+    }
     #nav-buttons li a.active,
     #nav-buttons li a:hover {
-        color: var(--brand-green);
+        color: var(--primary);
+        font-weight: 600;
     }
     #nav-buttons li:nth-child(2) > a {
         animation-delay: 80ms;
@@ -253,6 +278,14 @@ const LINKS = [
         100% {
             transform: translateY(0px);
             opacity: 1;
+        }
+    }
+    @media only screen and (max-width: 576px) {
+        #navbar {
+            padding-top: 20px;
+        }
+        .navInner {
+            padding: 0 20px;
         }
     }
     @media only screen and (max-width: 768px) {
@@ -283,9 +316,10 @@ const LINKS = [
             flex-flow: column;
             align-items: flex-start;
             transform: translateX(100%);
-            transition: transform var(--duration-base) var(--ease);
+            transition: transform var(--duration-base) var(--spring);
             padding: calc(var(--menu-size) + 32px) 32px 32px !important;
             margin: 0;
+            border-radius: var(--radius-lg) 0 0 var(--radius-lg);
         }
         #nav-buttons.revealed {
             transform: translateX(0)

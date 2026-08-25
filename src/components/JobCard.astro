@@ -1,158 +1,163 @@
 ---
-const { companyDescription: { tenure, designations, skillsUsed }, companyName, isActive } = Astro.props
+export interface Props {
+    job: {
+        company: string;
+        tenure: string;
+        title: string;
+        highlight: string;
+        skills: string[];
+        bg: string;
+        points: string[];
+    };
+    index: number;
+}
+const { job: { company, tenure, title, highlight, skills, bg, points }, index } = Astro.props
 ---
-<div class = "jobSection">
-    <div class = "circleRow">
-        <div class:list={["bulletCircle", { active: isActive }]} aria-hidden = "true"></div>
-        <div class = "jobSectionHeader">
-            <h2>{companyName}</h2>
-            <div class = "tenure">{tenure}</div>
+<li class = "timelineItem" style = {`--item-accent:${bg}; --reveal-delay:${Math.min(index, 5) * 90}ms`}>
+    <div class = "itemRail" aria-hidden = "true">
+        <span class = "itemDot"></span>
+    </div>
+    <div class = "itemContent">
+        <span class = "itemTenure">{tenure}</span>
+        <div class = "itemHead">
+            <h3>{title}</h3>
+            <span class = "itemCompany">{company}</span>
         </div>
+        <p class = "itemHighlight">{highlight}</p>
+        <ul class = "itemPoints">
+            {points.map((point: string) => <li>{point}</li>)}
+        </ul>
+        <ul class = "itemSkills">
+            {skills.map((skill: string) => <li>{skill}</li>)}
+        </ul>
     </div>
-    <div class = "jobContent">
-        {designations.map((designation: any) => (
-            <div>
-                <h3>{designation.title}</h3>
-                <ul class = "responsibilities">
-                    {designation.responsibilities.map(resp => (
-                        <li>{resp}</li>
-                    ))}
-                </ul>
-            </div>
-        ))}
-        {skillsUsed?.length > 0 && (
-            <h3 class = "skillHeader">Skills Used</h3>
-            <ul class = "skillContainer">
-                {skillsUsed.map((skill: string) => <li>{skill}</li>)}
-            </ul>
-        )}
-    </div>
-</div>
+</li>
 <style>
-    :root {
-        --circleSize: 30px;
-        --horizontalSpacing: 1rem;
-        --borderWidth: 2px;
-        counter-reset: jobCounter;
-    }
-    .jobSection {
+    .timelineItem {
+        position: relative;
+        display: grid;
+        grid-template-columns: 28px 1fr;
+        column-gap: 28px;
+        padding-bottom: 48px;
         opacity: 0;
         transform: translateY(20px);
-        transition: opacity var(--duration-base) var(--ease), transform var(--duration-base) var(--ease);
+        transition: opacity var(--duration-slow) var(--spring), transform var(--duration-slow) var(--spring);
         transition-delay: var(--reveal-delay, 0ms);
     }
-    .jobSection.cardRevealed {
+    .timelineItem:last-child {
+        padding-bottom: 0;
+    }
+    .timelineItem.itemRevealed {
         opacity: 1;
         transform: translateY(0);
     }
-    ul {
-        list-style: none;
-        padding: 0;
-    }
-    .responsibilities {
-        padding-left: 1rem;
-    }
-    .responsibilities > li {
-        line-height: 1.55;
-        margin-bottom: 6px;
-        color: var(--primary);
-    }
-    .responsibilities > li::before {
-        content: "✔ ";
-        color: var(--brand-green);
-    }
-    .circleRow {
+    .itemRail {
         display: flex;
-        align-items: center;
+        justify-content: center;
+        padding-top: 6px;
     }
-    .bulletCircle {
-        width: var(--circleSize);
-        height: var(--circleSize);
-        border-radius: calc(var(--circleSize) / 2);
-        display: grid;
-        place-items: center;
-        counter-increment: jobCounter;
-        content: counter(jobCounter);
-        background-color: var(--border-color);
-        position: relative;
-        flex-shrink: 0;
-        transition: background-color var(--duration-base) var(--ease);
-    }
-    .jobSectionHeader {
-        padding-left: var(--horizontalSpacing);
-    }
-    .tenure {
-        color: var(--secondary);
-        font-size: 0.9rem;
-        margin-top: 2px;
-    }
-    .bulletCircle.active {
-        background-color: var(--brand-green);
-    }
-    .bulletCircle.active::before {
-        background-color: var(--brand-green);
-        opacity: 0.5;
-        content: " ";
-        position: absolute;
-        width: 100%;
-        height: 100%;
+    .itemDot {
+        width: 14px;
+        height: 14px;
         border-radius: 50%;
-        animation: 1s infinite 0s pulse;
-        z-index: -1;
+        background-color: var(--bg-elevated);
+        border: 3px solid var(--item-accent);
+        box-shadow: 0 0 0 4px var(--bg);
+        transition: transform var(--duration-fast) var(--spring), background-color var(--duration-fast) var(--ease);
     }
-    .skillContainer {
+    .timelineItem:hover .itemDot {
+        background-color: var(--item-accent);
+        transform: scale(1.15);
+    }
+    .itemContent {
         display: flex;
-        align-items: center;
-        flex-wrap: wrap;
+        flex-direction: column;
         gap: 10px;
+        padding-top: 2px;
     }
-    .skillContainer > li {
-        padding: 5px 15px;
-        border-radius: 20px;
-        background-color: var(--bg-inset);
-        color: var(--primary);
-        font-size: 0.9rem;
-        border: 1px solid var(--border-color);
-        transition: background-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease), transform var(--duration-fast) var(--ease);
-    }
-    .skillContainer > li:hover {
-        background-color: var(--brand-green);
-        color: #f6fdfc;
-        transform: translateY(-2px);
-    }
-    .jobContent {
-        padding: 1rem 0;
-        padding-left: calc(var(--circleSize) / 2 - var(--borderWidth) / 2 + var(--horizontalSpacing));
-        margin: 1rem 0;
-        margin-left: calc(var(--circleSize) / 2 - var(--borderWidth) / 2);
-    }
-    .jobSection:not(:last-child) .jobContent {
-        border-left: var(--borderWidth) solid var(--border-color);
-    }
-    .skillHeader {
-        margin-bottom: 10px;
+    .itemTenure {
         color: var(--secondary);
+        font-size: 0.85rem;
     }
-    h2 {
+    .itemHead {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    .itemHead h3 {
         color: var(--primary);
+        font-size: 1.35rem;
     }
-    h3 {
+    .itemCompany {
         color: var(--secondary);
+        font-weight: 600;
     }
-    @keyframes pulse {
-        0% {
-            opacity: 0.5;
-            scale: 1;
+    .itemHighlight {
+        color: var(--secondary);
+        line-height: 1.55;
+        margin: 0;
+        max-width: 68ch;
+    }
+    .itemPoints {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 0;
+        margin: 4px 0 0;
+    }
+    .itemPoints > li {
+        position: relative;
+        padding-left: 20px;
+        color: var(--secondary);
+        line-height: 1.5;
+        font-size: 0.92rem;
+    }
+    .itemPoints > li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.5em;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: var(--item-accent);
+    }
+    .itemSkills {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 0;
+        margin-top: 6px;
+    }
+    .itemSkills > li {
+        padding: 5px 12px;
+        border-radius: 999px;
+        background-color: var(--item-accent);
+        color: var(--color-dark);
+        font-size: 0.82rem;
+        font-weight: 500;
+    }
+    @media only screen and (max-width: 576px) {
+        .timelineItem {
+            grid-template-columns: 20px 1fr;
+            column-gap: 18px;
+            padding-bottom: 36px;
         }
-        100% {
-            opacity: 0;
-            scale: 2;
+        .itemDot {
+            width: 12px;
+            height: 12px;
+        }
+        .itemHead h3 {
+            font-size: 1.15rem;
         }
     }
     @media (prefers-reduced-motion: reduce) {
-        .bulletCircle.active::before {
-            animation: none;
-            opacity: 0.35;
+        .timelineItem {
+            opacity: 1;
+            transform: none;
         }
     }
 </style>

@@ -1,0 +1,150 @@
+---
+const INDUSTRIES = [
+    {
+        name: "Fintech & Lending",
+        blurb: "Shipped NTB lending flows for banks and NBFCs like HDFC, ICICI, and Kotak — production code driving real revenue.",
+        bg: "var(--color-pink)"
+    },
+    {
+        name: "Enterprise SaaS & Data",
+        blurb: "Building insight feeds and embeddable dashboards for a data analytics platform used by teams daily.",
+        bg: "var(--color-blue)"
+    },
+    {
+        name: "Food & Hospitality Tech",
+        blurb: "Built order-taking and kitchen display systems keeping restaurants running in real time.",
+        bg: "var(--color-yellow)"
+    },
+    {
+        name: "Local Commerce",
+        blurb: "Helped local merchants get discovered through maps-based apps for everyday users.",
+        bg: "var(--color-lime)"
+    }
+]
+---
+<section id = "processSection">
+    <div class = "processIntro">
+        <h2 class = "display3">High-quality work with real value considered.</h2>
+        <p class = "bodyLg">
+            My approach revolves around maximizing productivity and craft with clarity and focus, starting from thorough requirement gathering, through careful implementation, to code that's built to last.
+        </p>
+    </div>
+    <div class = "industriesBlock">
+        <h3 class = "handwritten">Industries I've shipped in</h3>
+        <ul class = "industriesRow">
+            {INDUSTRIES.map((industry, i) => (
+                <li style = {`--industry-bg:${industry.bg};--industry-i:${i}`}>
+                    <span class = "industryDot" aria-hidden = "true"></span>
+                    <span class = "industryName">{industry.name}</span>
+                    <span class = "industryBlurb">{industry.blurb}</span>
+                </li>
+            ))}
+        </ul>
+    </div>
+</section>
+<script>
+    const industries = Array.from(document.querySelectorAll("#processSection .industriesRow li"))
+    const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("industryIn")
+                obs.unobserve(entry.target)
+            }
+        })
+    }, { threshold: 0.3 })
+    industries.forEach(industry => observer.observe(industry))
+</script>
+<style>
+    #processSection {
+        display: flex;
+        flex-direction: column;
+        gap: 60px;
+        align-items: center;
+        text-align: center;
+    }
+    .processIntro {
+        max-width: 720px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .processIntro p {
+        color: var(--secondary);
+    }
+    .industriesBlock {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+    }
+    .handwritten {
+        font-family: var(--font-hand);
+        font-size: clamp(22px, 2.5vw, 28px);
+        font-weight: 600;
+        color: var(--primary);
+        margin: 0;
+    }
+    .industriesRow {
+        list-style: none;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(260px, 1fr));
+        gap: 18px;
+        padding: 0;
+        margin: 0;
+        max-width: 720px;
+        text-align: left;
+    }
+    .industriesRow > li {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 22px 24px;
+        border-radius: var(--radius-md);
+        background-color: var(--bg-elevated);
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
+        opacity: 0;
+        transform: translateY(18px) scale(0.96);
+        transition: transform var(--duration-spring) var(--spring), opacity var(--duration-spring) var(--spring), box-shadow var(--duration-fast) var(--ease);
+    }
+    .industriesRow > li.industryIn {
+        opacity: 1;
+        transform: none;
+        transition-delay: calc(var(--industry-i, 0) * 110ms);
+    }
+    .industriesRow > li:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+    }
+    .industryDot {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background-color: var(--industry-bg);
+    }
+    .industryName {
+        font-size: 1.05rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        color: var(--primary);
+    }
+    .industryBlurb {
+        color: var(--secondary);
+        font-size: 0.92rem;
+        line-height: 1.45;
+    }
+    @media only screen and (max-width: 576px) {
+        .industriesRow {
+            grid-template-columns: 1fr;
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .industriesRow > li {
+            opacity: 1;
+            transform: none;
+            transition: none;
+        }
+    }
+</style>

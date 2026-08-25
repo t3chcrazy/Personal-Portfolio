@@ -6,39 +6,47 @@ const SOCIALS = [
         icon: import('../images/mail.svg?raw'),
         link: "mailto:abhishekprashant09@gmail.com",
         alt: "Mail",
+        bg: "var(--color-blue)",
         event: "contact-mail-click"
     },
     {
         icon: import('../images/twitter.svg?raw'),
         link: "https://twitter.com/The1WhoIsMany",
         alt: "Twitter",
+        bg: "var(--color-pink)",
         event: "contact-twitter-click"
     },
     {
         icon: import('../images/linkedin.svg?raw'),
         link: "https://linkedin.com/in/abhishek-prashant-92b152a9",
         alt: "Linkedin",
+        bg: "var(--color-yellow)",
         event: "contact-linkedin-click"
     },
     {
         icon: import('../images/github.svg?raw'),
         link: "https://github.com/t3chcrazy",
         alt: "Github",
+        bg: "var(--color-lime)",
         event: "contact-github-click"
     }
 ]
 ---
 <section id = "contactSection" class = "fullHeightSection">
-    <h3>Happy to connect!</h3>
+    <div class = "bgDot dotPurple" aria-hidden = "true"></div>
+    <div class = "bgDot dotPowder" aria-hidden = "true"></div>
+    <div class = "bgDot dotLime" aria-hidden = "true"></div>
+    <p class = "handwritten">Happy to connect!</p>
     <div class = "bottomSection">
-        <h1>Get in touch</h1>
+        <h2 class = "display3">Get in touch</h2>
         <div>
-            I am looking forward to connect with like minded people
+            Open to new opportunities and always happy to connect with like-minded people
         </div>
+        <a class = "ctaPrimary" href = "mailto:abhishekprashant09@gmail.com">Say hello</a>
     </div>
     <ul class = "socialsList">
         {SOCIALS.map(social => (
-            <li>
+            <li style = {`--pill-bg:${social.bg}`}>
                 <a href = {social.link} target = "_blank" rel="noopener" aria-label = {social.alt} data-goatcounter-click = {social.event}>
                     <Svg
                         src = {social.icon}
@@ -55,53 +63,166 @@ const SOCIALS = [
         flex-flow: column;
         align-items: center;
         justify-content: center;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        background-color: var(--color-green);
+        border-radius: var(--radius-lg);
+        padding: 80px 40px;
+    }
+    :global(html[data-theme="dark"]) #contactSection {
+        background-color: var(--bg-inset);
+    }
+    .bgDot {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: 0;
+        animation: dotIn 1.1s forwards var(--spring);
+    }
+    .dotPurple {
+        width: 56px;
+        height: 56px;
+        background-color: var(--color-purple);
+        top: 10%;
+        left: 8%;
+        animation-delay: 0.9s;
+    }
+    .dotPowder {
+        width: 40px;
+        height: 40px;
+        background-color: var(--color-powder);
+        top: 6%;
+        right: 20%;
+        animation-delay: 1.05s;
+    }
+    .dotLime {
+        width: 46px;
+        height: 46px;
+        background-color: var(--color-lime);
+        bottom: 12%;
+        right: 15%;
+        animation-delay: 1.2s;
+    }
+    @keyframes dotIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.6);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
     }
     ul {
         list-style: none;
         display: flex;
         align-items: center;
         padding: 0;
-        column-gap: 14px;
+        column-gap: 18px;
+        position: relative;
+        z-index: 1;
     }
     li a {
         display: grid;
         place-items: center;
-        width: 46px;
-        height: 46px;
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
-        color: var(--secondary);
-        background-color: var(--bg-elevated);
-        border: 1px solid var(--border-color);
-        transition: transform var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease), box-shadow var(--duration-fast) var(--ease);
+        color: var(--color-dark);
+        background-color: var(--pill-bg, var(--color-blue));
+        transition: transform var(--duration-fast) var(--spring), box-shadow var(--duration-fast) var(--ease);
     }
     li svg {
         width: 20px;
         height: 20px;
     }
     li a:hover, li a:focus-visible {
-        transform: translateY(-5px);
-        color: var(--brand-green);
+        transform: translateY(-5px) rotate(-6deg);
         box-shadow: var(--shadow-md);
     }
-    h3 {
-        font-size: 24px;
+    .socialsList li {
+        opacity: 0;
+    }
+    #contactSection.revealed .socialsList li {
+        animation: iconIn var(--duration-base) forwards var(--spring);
+    }
+    .socialsList li:nth-child(1) {
+        animation-delay: 0.05s;
+    }
+    .socialsList li:nth-child(2) {
+        animation-delay: 0.15s;
+    }
+    .socialsList li:nth-child(3) {
+        animation-delay: 0.25s;
+    }
+    .socialsList li:nth-child(4) {
+        animation-delay: 0.35s;
+    }
+    @keyframes iconIn {
+        0% {
+            opacity: 0;
+            transform: translateY(14px) scale(0.9);
+        }
+        100% {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    .handwritten {
+        font-family: var(--font-hand);
+        font-size: clamp(22px, 2.5vw, 28px);
+        font-weight: 600;
+        color: var(--primary);
+        margin: 0;
+        position: relative;
+        z-index: 1;
     }
     .bottomSection {
         display: inherit;
         flex-flow: column;
         align-items: center;
-        margin-top: 20px;
+        margin-top: 12px;
         margin-bottom: 40px;
+        position: relative;
+        z-index: 1;
     }
-    .bottomSection > h1 {
-        font-size: 48px;
-        color: var(--secondary);
+    .bottomSection > h2 {
+        color: var(--primary);
     }
     .bottomSection > div {
-        color: var(--brand-green);
-        line-height: 1.3;
+        color: var(--secondary);
+        line-height: 1.4;
         width: 60%;
         text-align: center;
         margin-top: 1rem;
+    }
+    .ctaPrimary {
+        display: inline-flex;
+        align-items: center;
+        margin-top: 1.75rem;
+        padding: 0.85rem 1.7rem;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 600;
+        background-color: var(--cta-bg);
+        color: var(--cta-text);
+        box-shadow: var(--shadow-sm);
+        transition: transform var(--duration-fast) var(--spring), box-shadow var(--duration-fast) var(--ease), background-color var(--duration-fast) var(--ease);
+    }
+    .ctaPrimary:hover, .ctaPrimary:focus-visible {
+        background-color: var(--cta-bg-hover);
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .bgDot {
+            animation: none;
+            opacity: 1;
+        }
+        .socialsList li {
+            opacity: 1;
+            animation: none;
+        }
     }
 </style>

@@ -1,4 +1,7 @@
 ---
+import '@fontsource-variable/inter/opsz.css';
+import caveatCssUrl from '@fontsource/caveat/600.css?url';
+
 export interface Props {
 	title: string;
 }
@@ -11,30 +14,36 @@ const { title } = Astro.props;
 		<meta name="google-site-verification" content="1Ivpmo3wIqWk48mmbZWLDzULDAiaHRa-kUv9Jtzu5h0" />
 		<link rel="sitemap" href="/sitemap-index.xml" />
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+		<!-- Caveat is decorative, used only below the fold: load it without blocking render or competing with critical fonts -->
+		<link rel="preload" as="style" href={caveatCssUrl} onload="this.onload=null;this.rel='stylesheet'" />
+		<noscript><link rel="stylesheet" href={caveatCssUrl} /></noscript>
 		<meta name="generator" content={Astro.generator} />
 		<!-- Primary Meta Tags -->
 		<meta name="title" content={title}>
-		<meta name="description" content="Software Engineer experienced with React, React-Native">
-		<meta name="keywords" content="Abhishek Prashant, t3chcrazy, software engineer, developer portfolio, web developer, GitHub, personal website">
+		<meta name="description" content="Abhishek Prashant is a full stack software engineer with 6+ years building production React, React Native, and Go applications, available for freelance and full-time work.">
+		<meta name="keywords" content="Abhishek Prashant, t3chcrazy, full stack software engineer, frontend developer, backend developer, software engineer, freelance developer, React developer, React Native developer, TypeScript developer, Go developer, Golang developer, web developer, mobile developer, developer portfolio, Bengaluru software engineer">
 		<meta name="author" content="Abhishek Prashant">
 		<link rel="canonical" href="https://t3chcrazy.github.io/">
 
 		<!-- Open Graph / Facebook -->
 		<meta property="og:title" content={title}>
-		<meta property="og:description" content="Explore the personal portfolio of Abhishek Prashant, software engineer focused on modern full-stack web and mobile development.">
+		<meta property="og:description" content="Full stack software engineer with 6+ years building production React, React Native, and Go applications. Open to freelance and full-time opportunities.">
 		<meta property="og:url" content="https://t3chcrazy.github.io/">
 		<meta property="og:type" content="website">
-		<meta property="og:image" content="favicon.svg">
+		<meta property="og:image" content="https://t3chcrazy.github.io/og-image.jpg">
+		<meta property="og:image:width" content="1200">
+		<meta property="og:image:height" content="1200">
+		<meta property="og:image:alt" content="Abhishek Prashant, full stack software engineer">
+		<meta property="og:locale" content="en_US">
 
 		<!-- Twitter -->
 		<meta property="twitter:card" content="summary_large_image">
 		<meta property="twitter:url" content="https://t3chcrazy.github.io/">
 		<meta property="twitter:title" content={title}>
-		<meta property="twitter:description" content="Explore the personal portfolio of Abhishek Prashant, software engineer focused on modern full-stack web and mobile development.">
-		<meta property="twitter:image" content="favicon.svg">
-		<meta name="keywords" content="Software Developer,Abhishek Prashant,React,React-Native,Flutter">
+		<meta property="twitter:description" content="Full stack software engineer with 6+ years building production React, React Native, and Go applications. Open to freelance and full-time opportunities.">
+		<meta property="twitter:image" content="https://t3chcrazy.github.io/og-image.jpg">
 		<meta name="robots" content="index, follow">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="language" content="English">
@@ -52,16 +61,20 @@ const { title } = Astro.props;
 		"@context": "https://schema.org",
 		"@type": "Person",
 		"name": "Abhishek Prashant",
+		"alternateName": "t3chcrazy",
 		"url": "https://t3chcrazy.github.io/",
+		"image": "https://t3chcrazy.github.io/og-image.jpg",
 		"sameAs": [
 			"https://github.com/t3chcrazy",
 			"https://linkedin.com/in/abhishek-prashant-app-dev/",
 			"https://toptal.com/resume/abhishek-prashant"
 		],
-		"jobTitle": "Software Engineer",
+		"jobTitle": "Full Stack Software Engineer",
+		"description": "Full stack software engineer specializing in React, React Native, and Go. Available for freelance and full-time opportunities.",
+		"knowsAbout": ["React", "React Native", "TypeScript", "JavaScript", "Go", "Golang", "REST APIs", "Frontend Development", "Full Stack Development", "Mobile Development", "CI/CD"],
 		"worksFor": {
 			"@type": "Organization",
-			"name": "Freelance / Independent"
+			"name": "Qlik"
 		}
 	}
 	</script>
@@ -74,57 +87,79 @@ const { title } = Astro.props;
 </html>
 <style is:global>
 	:root {
+		--nav-height: 116px;
+
+		/** Framer palette: Main Color / Hover Color tokens */
+		--color-purple: rgb(227, 227, 255);
+		--color-blue: rgb(227, 242, 255);
+		--color-blue-hover: rgb(209, 232, 253);
+		--color-yellow: rgb(255, 231, 169);
+		--color-yellow-hover: rgb(254, 222, 141);
+		--color-pink: rgb(255, 227, 251);
+		--color-green: rgb(219, 245, 240);
+		--color-green-hover: rgb(200, 240, 232);
+		--color-lime: rgb(233, 250, 192);
+		--color-powder: rgb(251, 235, 234);
+		--color-light: rgb(247, 247, 247);
+		--color-white: rgb(255, 255, 255);
+		--color-dark: rgb(29, 29, 29);
 		--accent: 124, 58, 237;
 		--accent-gradient: linear-gradient(45deg, rgb(var(--accent)), #da62c4 30%, white 60%);
-		--nav-height: 90px;
 
-		/** Motion */
+		/** Typography: Uncut Sans Variable substituted with Inter (closest freely-licensable match), self-hosted */
+		--font-sans: "Inter Variable", "Inter", system-ui, sans-serif;
+		--font-hand: "Caveat", cursive;
+
+		/** Motion: approximating Framer's spring-physics easing with cubic-bezier */
 		--ease: cubic-bezier(0.22, 1, 0.36, 1);
 		--ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+		--spring: cubic-bezier(0.16, 1, 0.3, 1);
 		--duration-fast: 0.2s;
 		--duration-base: 0.4s;
 		--duration-slow: 0.65s;
+		--duration-spring: 1.1s;
 
 		/** Layout */
-		--contentHorizontalSpacing: 0 50px;
-		--radius-sm: 8px;
-		--radius-md: 14px;
-		--radius-lg: 22px;
+		--gutter: 50px;
+		--contentHorizontalSpacing: 0 var(--gutter);
+		--radius-sm: 12px;
+		--radius-md: 20px;
+		--radius-lg: 32px;
 
 		/** Theme: light (default) */
 		--brand-green: #0d9488;
 		--brand-green-strong: #0b7c72;
-		--cta-bg: #0b7c72;
-		--cta-bg-hover: #095f58;
-		--cta-text: #f6fdfc;
-		--bg: #f6f6f6;
-		--bg-elevated: #ffffff;
-		--bg-inset: #eef0f0;
-		--border-color: rgba(15, 23, 22, 0.1);
-		--primary: #1f2933;
-		--secondary: #5b6b70;
-		--shadow-sm: 0 1px 3px rgba(15, 23, 22, 0.08), 0 1px 2px rgba(15, 23, 22, 0.06);
-		--shadow-md: 0 8px 24px rgba(15, 23, 22, 0.08), 0 2px 6px rgba(15, 23, 22, 0.05);
-		--shadow-lg: 0 16px 40px rgba(15, 23, 22, 0.12), 0 4px 10px rgba(15, 23, 22, 0.06);
-		--focus-ring: 0 0 0 3px rgba(13, 148, 136, 0.45);
+		--cta-bg: var(--color-dark);
+		--cta-bg-hover: #3a3a3a;
+		--cta-text: var(--color-white);
+		--bg: var(--color-light);
+		--bg-elevated: var(--color-white);
+		--bg-inset: var(--color-purple);
+		--border-color: rgba(29, 29, 29, 0.1);
+		--primary: var(--color-dark);
+		--secondary: rgba(29, 29, 29, 0.65);
+		--shadow-sm: 0 1px 3px rgba(29, 29, 29, 0.08), 0 1px 2px rgba(29, 29, 29, 0.06);
+		--shadow-md: 0 8px 24px rgba(29, 29, 29, 0.08), 0 2px 6px rgba(29, 29, 29, 0.05);
+		--shadow-lg: 0 16px 40px rgba(29, 29, 29, 0.12), 0 4px 10px rgba(29, 29, 29, 0.06);
+		--focus-ring: 0 0 0 3px rgba(29, 29, 29, 0.35);
 		color-scheme: light;
 	}
 	:root[data-theme="dark"] {
 		--brand-green: #2dd4bf;
 		--brand-green-strong: #5eead4;
-		--cta-bg: #2dd4bf;
-		--cta-bg-hover: #5eead4;
-		--cta-text: #04201d;
-		--bg: #10151a;
-		--bg-elevated: #181f26;
-		--bg-inset: #1f2830;
-		--border-color: rgba(255, 255, 255, 0.1);
-		--primary: #eef2f3;
-		--secondary: #a3b0b5;
+		--cta-bg: var(--color-white);
+		--cta-bg-hover: #e6e6e6;
+		--cta-text: var(--color-dark);
+		--bg: #171717;
+		--bg-elevated: #1f1f1f;
+		--bg-inset: #26263a;
+		--border-color: rgba(255, 255, 255, 0.12);
+		--primary: #f2f2f2;
+		--secondary: rgba(242, 242, 242, 0.65);
 		--shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
 		--shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3);
 		--shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.3);
-		--focus-ring: 0 0 0 3px rgba(45, 212, 191, 0.5);
+		--focus-ring: 0 0 0 3px rgba(255, 255, 255, 0.35);
 		color-scheme: dark;
 	}
 	* {
@@ -132,36 +167,41 @@ const { title } = Astro.props;
 	}
 	h1,h2,h3,h4,h5,h6 {
 		margin: 0;
-	}
-	h1.sectionHeader {
-		margin: 30px 0 40px;
-		padding-right: 20px;
-		position: relative;
-		z-index: 2;
-		background-color: var(--bg);
-		display: flex;
-		align-items: center;
-		color: var(--primary);
-		transition: background-color var(--duration-base) var(--ease);
-	}
-	h1.sectionHeader::after {
-		content: " ";
-		display: block;
-		position: relative;
-		height: 1px;
-		width: 50%;
-		background-color: var(--border-color);
-		margin-left: 10px;
+		font-family: var(--font-sans);
+		font-weight: 500;
+		letter-spacing: -0.03em;
 	}
 	html {
-		font-family: system-ui, sans-serif;
+		font-family: var(--font-sans);
 		background-color: var(--bg);
 		scroll-behavior: smooth;
 		color: var(--primary);
+		overflow-x: clip;
 		transition: background-color var(--duration-base) var(--ease), color var(--duration-base) var(--ease);
+	}
+	p, span, li, a, div {
+		font-family: var(--font-sans);
+	}
+	.display1 {
+		font-weight: 500;
+		letter-spacing: -0.05em;
+		line-height: 1.05;
+		font-size: clamp(38px, 6.5vw, 90px);
+	}
+	.display3 {
+		font-weight: 500;
+		letter-spacing: -0.04em;
+		line-height: 1.125;
+		font-size: clamp(28px, 4.5vw, 50px);
+	}
+	.bodyLg {
+		font-weight: 375;
+		line-height: 1.45;
+		font-size: clamp(18px, 2vw, 24px);
 	}
 	body {
 		margin: 0;
+		overflow-x: clip;
 	}
 	code {
 		font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
@@ -224,12 +264,12 @@ const { title } = Astro.props;
 	}
 	@media only screen and (max-width: 768px) {
         :root {
-            --contentHorizontalSpacing: 0 35px;
+            --gutter: 35px;
         }
     }
     @media only screen and (max-width: 576px) {
         :root {
-            --contentHorizontalSpacing: 0 25px;
+            --gutter: 25px;
         }
     }
 	@media (prefers-reduced-motion: reduce) {
