@@ -22,7 +22,7 @@ const INDUSTRIES = [
     }
 ]
 ---
-<section id = "processSection">
+<section id = "overviewSection">
     <div class = "processIntro">
         <h2 class = "display3">High-quality work with real value considered.</h2>
         <p class = "bodyLg">
@@ -43,7 +43,7 @@ const INDUSTRIES = [
     </div>
 </section>
 <script>
-    const industries = Array.from(document.querySelectorAll("#processSection .industriesRow li"))
+    const industries = Array.from(document.querySelectorAll("#overviewSection .industriesRow li"))
     const observer = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -55,7 +55,7 @@ const INDUSTRIES = [
     industries.forEach(industry => observer.observe(industry))
 </script>
 <style>
-    #processSection {
+    #overviewSection {
         display: flex;
         flex-direction: column;
         gap: 60px;
