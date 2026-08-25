@@ -4,6 +4,6 @@ import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://t3chcrazy.github.io",
+  site: "https://abhishekprashant.dev",
   integrations: [sitemap()],
 });
