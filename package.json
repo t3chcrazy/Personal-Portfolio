@@ -19,5 +19,10 @@
 	},
 	"devDependencies": {
 		"@jasikpark/astro-svg-loader": "^0.3.1"
-	}
+	},
+	"pnpm": {
+    "onlyBuiltDependencies": [
+      "workerd"
+    ]
+  }
 }
