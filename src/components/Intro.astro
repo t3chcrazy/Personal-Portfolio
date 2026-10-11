@@ -304,6 +304,10 @@ import { Image } from 'astro:assets';
         transform: translateY(-3px);
         box-shadow: var(--shadow-sm);
     }
+    :global(html[data-theme="dark"]) .ctaSecondary:hover, :global(html[data-theme="dark"]) .ctaSecondary:focus-visible {
+        background-color: #1e3a5f;
+        color: var(--primary);
+    }
     @media (prefers-reduced-motion: reduce) {
         .slideIn, .reveal, .badgeDot, .roleChip {
             animation: none;
